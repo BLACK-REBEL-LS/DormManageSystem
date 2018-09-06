@@ -1,0 +1,117 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <script src="../../layer/layer.js"></script>
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <title></title>
+    <script>
+        
+        function btn_Yes() {
+            var bid = $("#bid").val();
+            $.ajax({
+                type: "post",
+                contentType: "application/json",
+                url: "/Administor/selectDorm",
+                data: '{"bid":"' + bid + '"}',
+                dataType: "json",
+                async: false,
+                success: function (result) {
+                    var res = eval(result);
+                    var htmltxt = "<table class=\"table table-bordered table-condensed\">";
+                    $.each(res, function (i, d) {
+                        htmltxt += "<tr><td>" + d.one + "<input type=\"checkbox\" value=" + d.one + " /></td><td>" + d.two + "<input type=\"checkbox\" value=" + d.two + " /></td><td>" + d.three + "<input type=\"checkbox\" value=" + d.three + " /></td><td>" + d.four + "<input type=\"checkbox\" value=" + d.four + " /></td><td>" + d.five + "<input type=\"checkbox\" value=" + d.five + " /></td><td>" + d.six + "<input type=\"checkbox\" value=" + d.six + " /></td><td>" + d.seven + "<input type=\"checkbox\" value=" + d.seven + " /></td><td>" + d.eight + "<input type=\"checkbox\" value=" + d.eight + " /></td><td>" + d.nine + "<input type=\"checkbox\" value=" + d.nine + " /></td><td>" + d.ten + "<input type=\"checkbox\" value=" + d.ten + " /></td></tr>";
+                    });
+                    htmltxt += "</table>";
+                   // alert(htmltxt);
+                    $("#show").html(htmltxt);
+                },
+                error: function () { }
+            });
+        }
+
+        function btn_Insert() {
+            var sno = sessionStorage["checked"];//一个数组，要安排 宿舍 学生学号
+           // alert(sno.length);
+            //var snno = sno.substring(1);
+            //alert(snno);
+           // alert(typeof sno);string
+            var dormlist = [];//选择的宿舍
+            $('input:checkbox:checked').each(function () {
+                dormlist.push({dno:$(this).val()});
+            });
+            var dormString = JSON.stringify(dormlist);
+            //dormString = dormString.substring(0,dormString.length-1);
+            //alert(dormString);
+           // var totalstring = dormString+",{'bid':"+bid+"},"+snno;
+            //alert(totalstring);
+            var bid = $("#bid").val();
+
+
+            $.ajax({
+                type: "post",
+                contentType: "application/json",
+                url: "/Administor/updateStu",
+                data: sno,
+                success: function () {
+                    $.ajax({
+                        type: "post",
+                        contentType: "application/json",
+                        url: "/Administor/updateDorm",
+                        data: JSON.stringify(dormlist),
+                        success: function () {
+                            $.ajax({
+                                type: "post",
+                                contentType: "application/json",
+                                url: "/Administor/sureAction",
+                                data: '{"bid":"'+bid+'"}',
+                                success: function (result) {
+                                    //alert(result);
+                                    var res=result;
+                                    if (res == "ok")
+                                    {
+                                        alert("成功安排住宿");
+                                        closeLayr();
+                                    }
+                                    else
+                                    {
+                                        alert(res);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        function closeLayr()
+        {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+            layer.close();
+        }
+    </script>
+</head>
+<body>
+    <label>宿舍楼号：</label>
+    <select name="bid" id="bid">
+        @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["build"]).Rows)
+        { 
+        <option value="@dataRow["bid"].ToString()">@dataRow["bid"].ToString()</option>
+        }
+    </select>
+    <button class="btn btn-primary" onclick="btn_Yes()">OK</button>
+    <div id="show">
+        
+    </div>
+    <button class="btn btn-primary" onclick="btn_Insert()">确定</button>
+</body>
+</html>

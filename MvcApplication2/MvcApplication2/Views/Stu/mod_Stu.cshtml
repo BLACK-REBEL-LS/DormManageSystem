@@ -1,0 +1,112 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+
+    @*<script src="../../Scripts/jquery-1.9.1.min.js"></script>*@
+    @*jQ版本高了，不会执行Ajax.BeginForm的 Onsuccess 函数；jQ版本低，则bootstrap无法使用*@
+    <script src="../../Scripts/jquery-1.7.2.min_74e92c4.js"></script>
+    <script src="../../Scripts/jquery-1.4.2.js"></script>
+    <script src="../../Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="../../Scripts/jquery.unobtrusive-ajax.js"></script>
+
+    <script src="../../Scripts/bootstrap.js"></script>
+    <script src="../../layer/layer.js"></script>
+
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <script>
+        $(function () {
+            var sno = sessionStorage["sno"];
+            var school = sessionStorage["school"];
+             alert(sno);
+            $.ajax({
+                type: "post",
+                contentType:"application/json;charset=utf-8",
+                url: "/Stu/Select_Sno",
+                data: '{"sno":"' + sno + '","school":"'+school+'"}',
+                dataType: "json",
+                async: false,
+               
+                success: function (result) {
+                    var res = eval(result);
+                    $.each(res, function (i, d) {
+                        $("#txt_no").val(d.sno);
+                        $("#txt_name").val(d.sname);
+                        $("#txt_sex").val(d.ssex);
+                        $("#txt_dept").val(d.sdept);
+
+                        $("#txt_dorm").val(d.dorm);
+                        $("#txt_s_time").val(d.s_time);
+                        $("#txt_e_time").val(d.e_time);
+                        $("#txt_m_time").val(d.m_time);
+                    });
+                },
+                error: function (jqXHR,textStatus,errorThrown) {
+                    alert(jqXHR.responseText);
+                    alert(jqXHR.status);
+                    alert(jqXHR.readyState);
+                    alert(jqXHR.statusText);
+                    alert(textStatus);
+                    alert(errorThrown);
+                }
+            });
+
+        });
+        function aftermod(data) {
+            if (data == "ok")
+            {
+                window.alert("修改成功");
+            }
+            closeLayer();
+        }
+        function closeLayer() {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+            layer.close();
+        }
+        function Cancle() {
+            closeLayer();
+        }
+    </script>
+</head>
+<body>
+    @using (Ajax.BeginForm("mod_Stu", new AjaxOptions { }, new AjaxOptions() {OnSuccess="aftermod" }))
+    {
+        <form>
+            <label for="sno">学号：</label>
+            <input type="text" id="txt_no" name="txt_no" /><br />
+
+            <label for="sname">姓名：</label>
+            <input type="text" id="txt_name" name="txt_name" /><br />
+
+            <label for="sex">性别：</label>
+            <input type="text" id="txt_sex" name="txt_sex" /><br />
+
+            <label for="sdept">系别：</label>
+            <input type="text" id="txt_dept" name="txt_dept" /><br />
+
+            <label for="dorm">宿舍：</label>
+            <input type="text" id="txt_dorm" name="txt_dorm" /><br />
+
+            <label for="s_time">入学时间</label>
+            <input type="date" id="txt_s_time" name="txt_s_time" /><br />
+
+            <label for="e_time">拟毕业时间</label>
+            <input type="date" id="txt_e_time" name="txt_e_time" /><br />
+
+            <label for="m_time">修改时间</label>
+            <input type="date" id="txt_m_time" name="txt_m_time" />
+
+            <button type="submit" class="btn btn-primary">确定</button>
+            <button class="btn" onclick="Cancle()">取消</button>
+        </form>
+    }
+</body>
+</html>

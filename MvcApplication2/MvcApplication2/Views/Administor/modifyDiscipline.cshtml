@@ -1,0 +1,101 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="../../Scripts/jquery-1.7.2.min_74e92c4.js"></script>
+    <script src="../../Scripts/jquery-1.4.2.js"></script>
+    <script src="../../Scripts/jquery.unobtrusive-ajax.js"></script>
+
+    <script src="../../layer/layer.js"></script>
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <title></title>
+    <script>
+        $(function () {
+           var id= sessionStorage["did"];
+           var lname = sessionStorage["dname"];
+           var sno = sessionStorage["dsno"];
+           var dorm= sessionStorage["ddorm"];
+           var reason= sessionStorage["dreason"];
+           var punish= sessionStorage["dpunish"];
+           var leader= sessionStorage["dleader"];
+           var time= sessionStorage["dtime"];
+           var remark = sessionStorage["dremark"];
+           $("#txt_lname").val(lname);
+           $("#txt_dorm").val(dorm);
+           $("#txt_reason").val(reason);
+           $("#txt_punish").val(punish);
+           $("#txt_leader").val(leader);
+           $("#txt_s_time").val(time);
+           $("#txt_remark").val(remark);
+           $("#txt_id").val(id);
+           $("#txt_sno").val(sno);
+        });
+        function afterAdd(data) {
+            if (data == "ok") {
+                window.alert("修改成功！");
+            }
+            else if (data == "no") {
+                window.alert("修改失败！");
+            }
+            closeLayer();
+        }
+        function Cancle() {
+            closeLayer();
+        }
+        function closeLayer() {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+            layer.close();
+        }
+
+    </script>
+</head>
+<body>
+     @using (Ajax.BeginForm("modifyDiscipline", new AjaxOptions { }, new AjaxOptions() { OnSuccess = "afterAdd" }))
+    {
+        <form>
+            <label>编号：</label>
+            <input type="text" id="txt_id" name="txt_id" />
+
+            <label>姓名：</label>
+            <input type="text" id="txt_lname" name="txt_lname" /><br />
+
+            <label>学号：</label>
+            <input type="text" id="txt_sno" name="txt_sno" /><br />
+
+            <label>宿舍号：</label>
+            <input type="text" id="txt_dorm" name="txt_dorm" /><br />
+
+            <label>原因：</label>
+            <input type="text" id="txt_reason" name="txt_reason" /><br />
+
+            <label>处罚：</label>
+            <input type="text" id="txt_punish" name="txt_punish" /><br />
+
+            <label>批准人：</label>
+            <input type="text" id="txt_leader" name="txt_leader" /><br />
+
+            <label>时间：</label>
+            <input type="datetime" id="txt_s_time" name="txt_s_time" /><br />
+
+            <label>备注：</label>
+            <input type="text" id="txt_remark" name="txt_remark" /><br />
+
+            
+
+            <button type="submit" class="btn btn-primary">确定</button>
+            
+            <button class="btn" onclick="Cancle()">取消</button>
+        
+
+        </form>
+
+    }
+</body>
+</html>

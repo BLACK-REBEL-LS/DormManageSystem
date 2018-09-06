@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <script src="../../Scripts/bootstrap.js"></script>
+    <script src="../../layer/layer.js"></script>
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+
+    <link href="../../Content/CSS/Administor_Index.css" rel="stylesheet" />
+    <title></title>
+    <style type="text/css">
+
+        #main .mt_ul li {
+            float:left;
+            width:11%;
+            height:85px;
+            text-align:center;
+            padding:10px;
+        }
+      
+        .m_a {
+            color:#cdcdcd;
+            font-size:14px;
+        }
+            .m_a:hover {
+                color:white;
+            }
+            .m_a:visited {
+                color:white;
+            }
+            .m_a:active {
+                color:white;
+            }
+        .main_md {
+            height:4px;
+            width:100%;
+            background-color:rgb(255,129,0);
+        }
+        .mt_li {
+            border-left:1px solid rgb(87,107,142);
+            border-right:1px solid rgb(87,107,142);
+        }
+        .m_li {
+            border-left:1px solid rgb(87,107,142);
+        }
+    </style>
+    <script>
+        $(function () {
+            var user = sessionStorage["username"];
+            $("#User").text(user);
+        });
+        function btn_Modify() {
+            layer.open({
+                type: 2,
+                shade: 0.5,
+                title: "修改信息",
+                shadeClose: true,
+                area: ['400px', '48%'],
+                content: '/Login/StuInfo',
+                end: function () {
+                    // location.reload();
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div id="head">
+        <p class="pull-left hr"><img src="../../image/sus.png" height="50" width="50" alt="宿舍" /> 学生宿舍管理系统</p>
+        <p class="pull-right hl">欢迎！<a href="#" id="User" onclick="btn_Modify()" style="color:white"></a> |<a href="../Login/Index">注销</a></p>
+    </div>
+
+    <div id="main">
+        <div class="main_top">
+            <ul class="mt_ul">
+                <li id="outPeo"><a href="../Administor/OutPeopleCome" class="m_a"><img src="../../image/manager/outpeoG.png" id="op" /><br /> 外来人员管理</a></li>
+                <li id="breakRule" class="mt_li"><a href="../Administor/Discipline" class="m_a"><img src="../../image/manager/breakG.png" id="br" /><br />违纪管理</a></li>
+                <li id="repair"><a href="../Administor/Repair" class="m_a"><img src="../../image/manager/repairG.png" id="re" /><br /> 报修管理</a></li>
+                <li id="worker" class="mt_li"><a href="/Manager/Index" class="m_a"><img src="../../image/manager/workerG.png" id="wr" /><br />职工管理</a>  </li>
+                <li id="plant"><a href="../Administor/TryPlan" class="m_a"><img src="../../image/manager/stayG.png" id="pt" /><br />安排住宿</a> </li>
+                <li id="seeStu" class="mt_li"><a href="../Stu/TryStu" class="m_a"><img src="../../image/manager/seeStuG.png" id="st" /><br />学生管理</a> </li>
+                <li id="staySch"><a href="../Administor/School" class="m_a"><img src="../../image/manager/stayingG.png" id="sch" /><br /> 留校管理</a></li>
+                <li id="feedback" class="m_li"><a href="../Administor/FeedBack" class="m_a"><img src="../../image/manager/feedbackG.png" id="fb" /><br />意见反馈</a> </li>
+                <li id="use" class="m_li"><a href="../Administor/User" class="m_a"><img src="../../image/manager/yonhG.png" id="u" /><br />用户管理</a></li>
+            </ul>
+        </div>
+
+        <div class="main_md"></div>
+        
+        <div class="main_bottom">
+         @RenderBody();
+        </div>
+    </div>
+
+    <div id="fooder"></div>
+
+</body>
+</html>

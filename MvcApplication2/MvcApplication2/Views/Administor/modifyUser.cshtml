@@ -1,0 +1,87 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script src="../../Scripts/jquery-1.7.2.min_74e92c4.js"></script>
+    <script src="../../Scripts/jquery-1.4.2.js"></script>
+    <script src="../../Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="../../layer/layer.js"></script>
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <title></title>
+    <script>
+        $(function () {
+            
+            var name= sessionStorage["uname"];
+            var remark2= sessionStorage["usno"];
+            var role=sessionStorage["urole"];
+            var remark1= sessionStorage["utel"];
+            var remark3 = sessionStorage["uremark3"];
+           
+            $("#txt_lname").val(name);
+            $("#txt_sno").val(remark2);
+            $("#role").val(role);
+            $("#txt_tel").val(remark1);
+            $("#txt_remark").val(remark3);
+        });
+        function afterAdd(data) {
+            if (data == "ok") {
+                window.alert("修改成功！");
+            }
+            else if (data == "no") {
+                window.alert("修改失败！");
+            }
+            closeLayer();
+        }
+        function Cancle() {
+            closeLayer();
+        }
+        function closeLayer() {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+            layer.close();
+        }
+    </script>
+</head>
+<body>
+     @using (Ajax.BeginForm("modifyUser", new AjaxOptions { }, new AjaxOptions() { OnSuccess = "afterAdd" }))
+    {
+        <form>
+            @*<label>编号：</label>
+            <input type="text" id="txt_id" name="txt_id" />*@
+
+            <label>昵称：</label>
+            <input type="text" id="txt_lname" name="txt_lname" /><br />
+
+            <label>学号：</label>
+            <input type="text" id="txt_sno" name="txt_sno" /><br />
+
+            <label>权限：</label>
+            <select id="role" name="role">
+                <option value="admin">admin</option>
+                <option value="student">student</option>
+            </select>
+            <br />
+
+            <label>联系电话：</label>
+            <input type="text" id="txt_tel" name="txt_tel" /><br />
+
+            <label>备注：</label>
+            <input type="text" id="txt_remark" name="txt_remark" /><br />
+
+            <button type="submit" class="btn btn-primary">确定</button>
+            
+            <button class="btn" onclick="Cancle()">取消</button>
+        
+
+        </form>
+
+    }
+</body>
+</html>

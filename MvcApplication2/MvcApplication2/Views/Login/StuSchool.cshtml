@@ -1,0 +1,109 @@
+﻿@{
+    Layout = "~/Views/Stu/SeeStudent.cshtml";
+}
+<link href="../../Content/CSS/fooder.css" rel="stylesheet" />
+<script>
+    function btn_Dete(id) {
+        layer.confirm('确定删除此条记录', {
+            btn: ["确定", "取消"]
+        }, function () {
+            $.ajax({
+                type: "post",
+                contentType: "application/json",
+                url: "/Administor/deleteSchool",
+                data: '{"id":"' + id + '"}',
+                success: function (result) {
+
+                    layer.alert('操作成功', {
+                        closeBtn: 0,
+                        anim: 4
+                    });
+                    location.reload();
+                },
+                error: function () { }
+            });
+        }, function () { });
+    }
+    function bdlclick(id, name, sno, s_time, e_time, pdorm, odorm, leader, tel, remark) {
+        sessionStorage["sid"] = id;
+        sessionStorage["sname"] = name;
+        sessionStorage["scsno"] = sno;
+        sessionStorage["shs_time"] = s_time;
+        sessionStorage["she_time"] = e_time;
+        sessionStorage["spdorm"] = pdorm;
+        sessionStorage["sodorm"] = odorm;
+        sessionStorage["sleader"] = leader;
+        sessionStorage["stel"] = tel;
+        sessionStorage["rremark"] = remark;
+        layer.open({
+            type: 2,
+            shade: 0.5,
+            title: "修改信息",
+            shadeClose: true,
+            area: ['450px', '58%'],
+            content: '/Administor/modifySchool',
+            end: function () {
+                location.reload();
+            }
+        });
+    }
+    function btn_Add() {
+        layer.open({
+            type: 2,
+            shade: 0.5,
+            title: "修改信息",
+            shadeClose: true,
+            area: ['450px', '58%'],
+            content: '/Administor/addSchool',
+            end: function () {
+                location.reload();
+            }
+        });
+    }
+</script>
+<div>
+    <button class="btn btn-primary" onclick="btn_Add()">申请</button>
+</div>
+<div>
+    @if (ViewData["dt"] != null)
+         {
+        <table class="table table-bordered table-condensed">
+            <thead class="thead-color">
+                <tr>
+                    <th class="text-center">序号</th>
+                    <th class="text-center">姓名</th>
+                    <th class="text-center">学号</th>
+                    <th class="text-center">开始时间</th>
+                    <th class="text-center">结束时间</th>
+                    <th class="text-center">现住宿舍</th>
+                    <th class="text-center">原宿舍</th>
+                    <th class="text-center">批准人</th>
+                    <th class="text-center">联系电话</th>
+                    <th class="text-center">备注</th>
+                    <th class="text-center">操作</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                @{int k = 1;}
+                @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["dt"]).Rows)
+                {
+                <tr ondblclick="bdlclick('@dataRow["id"].ToString()','@dataRow["name"].ToString()','@dataRow["sno"].ToString()','@dataRow["s_time"].ToString()','@dataRow["e_time"].ToString()','@dataRow["pdorm"].ToString()','@dataRow["odorm"].ToString()','@dataRow["leader"].ToString()','@dataRow["tel"].ToString()','@dataRow["remark"].ToString()')">
+                    <td>@k</td>
+                    <td>@dataRow["name"].ToString()</td>
+                    <td>@dataRow["sno"].ToString()</td>
+                    <td>@dataRow["s_time"].ToString()</td>
+                    <td>@dataRow["e_time"].ToString()</td>
+                    <td>@dataRow["pdorm"].ToString()</td>
+                    <td>@dataRow["odorm"].ToString()</td>
+                    <td>@dataRow["leader"].ToString()</td>
+                    <td>@dataRow["tel"].ToString()</td>
+                    <td>@dataRow["remark"].ToString()</td>
+                    <td><button class="btn btn-default btn-sm" onclick="btn_Dete(@dataRow["id"].ToString())">删除 </button></td>
+                </tr>
+                    k++;
+                }
+            </tbody>
+        </table>
+         }
+</div>
+ 

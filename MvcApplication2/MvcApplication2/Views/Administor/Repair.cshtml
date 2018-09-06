@@ -1,0 +1,210 @@
+﻿@model MvcApplication2.Models.FormData
+@{
+    ViewBag.Title = "Repair";
+}
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <script src="../../layer/layer.js"></script>
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <link href="../../Content/CSS/fooder.css" rel="stylesheet" />
+    <style type="text/css">
+        #rhead {
+            width:100%;
+            height:70px;
+            background-color:white;
+            
+        }
+            #rhead .rm {
+            margin:10px;
+            width:98%;
+            height:90%;
+            background-color:rgb(241,244,251);
+            border:1px solid rgb(179,202,236);
+            
+            }
+                #rhead .rm .rm-m {
+                padding:14px;
+                }
+    </style>
+    <script>
+        $(function () {
+            //var str = $("#txt_category option").map(function () { return $(this).val(); }).get().join(",");//水电，木工，空调
+            
+
+            // $("#txt_category").val('@Model.cateGory');
+            $("#op").attr("src", "../../image/manager/outpeoG.png");
+            $("#br").attr("src", "../../image/manager/breakG.png");
+
+            $("#re").attr("src", "../../image/manager/repairW.png");
+
+            $("#wr").attr("src", "../../image/manager/workerG.png");
+            $("#pt").attr("src", "../../image/manager/stayG.png");
+            $("#st").attr("src", "../../image/manager/seeStuG.png");
+            $("#sch").attr("src", "../../image/manager/stayingG.png");
+            $("#fb").attr("src", "../../image/manager/feedbackG.png");
+            $("#u").attr("src", "../../image/manager/yonhG.png");
+            
+            $("#txt_category").find("option:contains('@Model.cateGory')").attr("selected", true);
+            var v = document.getElementsByName("handle");
+            for (var i = 0; i < v.length; i++)
+            {
+
+                if (v[i].value == '@Model.handle')
+                {
+                    v[i].checked = true;
+                }
+            }
+
+        });
+            function btn_Dete(id)
+            {
+                layer.confirm('确定删除此条记录', {
+                    btn: ["确定", "取消"]
+                }, function () {
+                    $.ajax({
+                        type: "post",
+                        contentType: "application/json",
+                        url: "/Administor/delectRepair",
+                        data: '{"id":"' + id + '"}',
+                        success: function (result) {
+
+                            layer.alert('操作成功', {
+                                closeBtn: 0,
+                                anim: 4
+                            });
+                            location.reload();
+                        },
+                        error: function () { }
+                    });
+                }, function () { });
+            }
+
+            function bdlclick(id,rname,dorm,category,handle,s_time,e_time,wname,sno,remark) {
+                sessionStorage["rid"] = id;
+                sessionStorage["rname"] = rname;
+                sessionStorage["rdorm"] = dorm;
+                sessionStorage["rcategory"] = category;
+                sessionStorage["rhandle"] = handle;
+                sessionStorage["rs_time"] = s_time;
+                sessionStorage["re_time"] = e_time;
+                sessionStorage["rwname"] = wname;
+                sessionStorage["rsno"] = sno;
+                sessionStorage["rremark"] = remark;
+                layer.open({
+                    type: 2,
+                    shade: 0.5,
+                    title: "修改信息",
+                    shadeClose: true,
+                    area: ['450px', '58%'],
+                    content: '/Administor/modifyRepair',
+                    end: function () {
+                        location.reload();
+                    }
+                });
+            }
+
+            function btn_Add() {
+                layer.open({
+                    type: 2,
+                    shade: 0.5,
+                    title: "修改信息",
+                    shadeClose: true,
+                    area: ['450px', '58%'],
+                    content: '/Administor/addRepair',
+                    end: function () {
+                        location.reload();
+                    }
+                });
+            }
+            function btn_Excel() {
+                $.ajax({
+                    type: "post",
+                    contentType: "application/json",
+                    url: "/Administor/Repair_ExportData",
+                    success: function (result) {
+                        if (result == "ok") {
+                            alert("导出成功");
+                        }
+                    }
+                });
+            }
+            
+    </script>
+    <div id="rhead">
+        <div class="rm">
+            <div class="rm-m">
+         @using (Ajax.BeginForm("Repair", new AjaxOptions { }))
+                 {
+                <input type="button" class="btn btn-primary" onclick="btn_Add()" value="添加" />
+                
+             <label>类别：</label>
+             <select name="txt_category" id="txt_category">
+                 @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["dtCate"]).Rows)
+                 {
+                     <option value="@dataRow["category"].ToString()">@dataRow["category"].ToString()</option>
+                 }
+             </select>
+                <label>查找开始日期：</label>
+                <input type="date" id="txt_s_date" name="txt_s_date" value="@Model.sDate"/>
+                <label>查找结束日期：</label>
+                <input type="date" id="txt_e_date" name="txt_e_date" value="@Model.eDate" />
+
+                <label>楼号：</label>
+                <input type="text" id="txt_id" name="txt_id" value="@Model.Bid" />
+             
+                <label>是否完工：</label>
+                <input type="radio" name="handle" value="1" /><label>是</label>
+             <input type="radio" name="handle" value="0" checked="checked" /><label>否</label>
+             
+               
+                <button type="submit" class="btn btn-primary" >查询</button>
+             <a href="#" onclick="btn_Excel()">导出数据</a>
+                 }
+                </div>
+            </div>
+    </div>
+    <div id="rmain">
+        @if(ViewData["dt"]!=null)
+        {
+        <table class="table table-bordered table-condensed">
+            <thead class="thead-color">
+                <tr>
+                    <th class="text-center">序号</th>
+                    <th class="text-center">报修人姓名</th>
+                    <th class="text-center">宿舍号</th>
+                    <th class="text-center">类别</th>
+                    <th class="text-center">是否处理</th>
+                    <th class="text-center">报修时间</th>
+                    <th class="text-center">完成时间</th>
+                    <th class="text-center">维修人</th>
+                    <th class="text-center">报修学号</th>
+                    <th class="text-center">备注</th>
+                    <th class="text-center">操作</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                @{int k = 1;}
+                @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["dt"]).Rows)
+                {
+                <tr ondblclick="bdlclick('@dataRow["id"].ToString()','@dataRow["rname"].ToString()','@dataRow["dorm"].ToString()','@dataRow["category"].ToString()','@dataRow["handle"].ToString()','@dataRow["s_time"].ToString()','@dataRow["e_time"].ToString()','@dataRow["wname"].ToString()','@dataRow["sno"].ToString()','@dataRow["remark"].ToString()')">
+                    <td>@k</td>
+                    <td>@dataRow["rname"].ToString()</td>
+                    <td>@dataRow["dorm"].ToString()</td>
+                    <td>@dataRow["category"].ToString()</td>
+                    <td>@dataRow["handle"].ToString()</td>
+                    <td>@dataRow["s_time"].ToString()</td>
+                    <td>@dataRow["e_time"].ToString()</td>
+                    <td>@dataRow["wname"].ToString()</td>
+                    <td>@dataRow["sno"].ToString()</td>
+                    <td>@dataRow["remark"].ToString()</td>
+                    <td><button class="btn btn-default btn-sm" onclick="btn_Dete(@dataRow["id"].ToString())">删除 </button></td>
+                </tr>
+                    k++;
+                }
+            </tbody>
+        </table>
+        }
+    </div>
+    <div id="rfood">
+         @MvcHtmlString.Create(Common.FoodPage.ShowPageFood((int)ViewData["pageIndex"],(int)ViewData["totalCount"],Model.sDate,Model.eDate,Model.Bid,Model.cateGory,Model.handle));
+    </div>

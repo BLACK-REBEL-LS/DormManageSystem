@@ -1,0 +1,17 @@
+﻿#rhead {
+        width:100%;
+        height:70px;
+        background-color:white;
+            
+        }
+#rhead .rm {
+    margin:10px;
+    width:98%;
+    height:90%;
+    background-color:rgb(241,244,251);
+    border:1px solid rgb(179,202,236);
+            
+}
+#rhead .rm .rm-m {
+    padding:14px;
+}

@@ -1,0 +1,110 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <script src="../../Scripts/bootstrap.js"></script>
+    <script src="../../layer/layer.js"></script>
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <title></title>
+    <style type="text/css">
+        .thead-color {
+            background-color:rgb(66,85,117);
+            color:white;
+        }
+        table tbody tr:nth-child(even) {
+            background-color:rgb(235,241,255);
+        }
+        table tbody tr:nth-child(odd) {
+            background-color:rgb(247,250,255);
+        }
+        table tbody tr:hover {
+            background-color:rgb(109,148,207);
+            color:white;
+        }
+    </style>
+    <script>
+        function btn_addB() {
+            layer.open({
+                type: 2,
+                shade: 0.5,
+                title: "宿舍楼情况",
+                shadeClose: true,
+                area: ['350px', '58%'],
+                content: '/Manager/addBuild',
+                end: function () {
+                    //更新数据
+                    // updataBuild();
+                    location.reload();
+                }
+
+            });
+        }
+
+        
+
+        function dblclick(bid, name, area, remark1, remark2) {
+            sessionStorage["bbid"] = bid;
+            sessionStorage["bname"] = name;
+            sessionStorage["brea"] = area;
+            sessionStorage["bremark1"] = remark1;
+            sessionStorage["bremark2"] = remark2;
+            layer.open({
+                type: 2,
+                shade: 0.5,
+                title: "宿舍楼情况",
+                shadeClose: true,
+                area: ['350px', '58%'],
+                content: '/Manager/modiftBuild',
+                end: function () {
+                    //更新数据
+                    location.reload();
+                }
+
+            });
+        }
+    </script>
+</head>
+<body>
+    <button class="btn btn-primary" onclick="btn_addB()">添加</button>
+    <div id="bmain">
+        @if(ViewData["dt"]!=null){
+        <table class="table table-bordered table-condensed">
+            <thead class="thead-color">
+                <tr>
+                    <td class="text-center">序号</td>
+                    <td class="text-center">编号</td>
+                    <td class="text-center">名称</td>
+                    <td class="text-center">地址</td>
+                    <td class="text-center">备注1</td>
+                    <td class="text-center">备注2</td>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                 @{ var k = 1;
+        }
+        
+                @foreach(System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["dt"]).Rows){
+                
+                    <tr ondblclick="dblclick(@dataRow["bid"].ToString(),'@dataRow["buildname"].ToString()','@dataRow["barea"].ToString()','@dataRow["remark1"].ToString()','@dataRow["remark2"].ToString()')">
+                        <td>@k</td>
+                        <td>@dataRow["bid"].ToString()</td>
+                        <td>@dataRow["buildname"].ToString()</td>
+                        <td>@dataRow["barea"].ToString()</td>
+                        <td>@dataRow["remark1"].ToString()</td>
+                        <td>@dataRow["remark2"].ToString()</td>
+                    </tr>
+                    k++;
+                }
+            </tbody>
+        </table>
+        }
+    </div>
+</body>
+</html>

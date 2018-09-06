@@ -1,0 +1,134 @@
+﻿@model MvcApplication2.Models.FormData
+@{
+    ViewBag.Title = "FeedBack";
+}
+
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <script src="../../layer/layer.js"></script>
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/CSS/fooder.css" rel="stylesheet" />
+    <link href="../../Content/CSS/head.css" rel="stylesheet" />
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <script>
+        $(function () {
+            $("#op").attr("src", "../../image/manager/outpeoG.png");
+            $("#br").attr("src", "../../image/manager/breakG.png");
+            $("#re").attr("src", "../../image/manager/repairG.png");
+            $("#wr").attr("src", "../../image/manager/workerG.png");
+            $("#pt").attr("src", "../../image/manager/stayG.png");
+            $("#st").attr("src", "../../image/manager/seeStuG.png");
+            $("#sch").attr("src", "../../image/manager/stayingG.png");
+
+            $("#fb").attr("src", "../../image/manager/feedbackW.png");
+
+            $("#u").attr("src", "../../image/manager/yonhG.png");
+        });
+        function bdlclick(id, time, remark, remark2, remark3) {
+            sessionStorage["fid"] = id;
+            sessionStorage["ftime"] = time;
+            sessionStorage["dremark"] = remark;
+            sessionStorage["dremark2"] = remark2;
+            sessionStorage["dremark3"] = remark3;
+            layer.open({
+                type: 2,
+                shade: 0.5,
+                title: "修改信息",
+                shadeClose: true,
+                area: ['450px', '58%'],
+                content: '/Administor/modifyFeed',
+                end: function () {
+                    location.reload();
+                }
+            });
+
+        }
+        function btn_Dete(id) {
+
+            layer.confirm('确定删除此条记录', {
+                btn: ["确定", "取消"]
+            }, function () {
+                $.ajax({
+                    type: "post",
+                    contentType: "application/json",
+                    url: "/Administor/deleteFeed",
+                    data: '{"id":"' + id + '"}',
+                    success: function (result) {
+
+                        layer.alert('操作成功', {
+                            closeBtn: 0,
+                            anim: 4
+                        });
+                        location.reload();
+                    },
+                    error: function () { }
+                });
+            }, function () { });
+
+        }
+        function btn_Excel() {
+            $.ajax({
+                type: "post",
+                contentType: "application/json",
+                url: '/Administor/Feed_ExportData',
+                success: function (result) {
+                    if (result == "ok") {
+                        alert("导出成功");
+                    }
+                }
+            });
+        }
+    </script>
+
+    <div id="rhead">
+        <div class="rm">
+            <div class="rm-m">
+                @using (Ajax.BeginForm("FeedBack", new AjaxOptions { }))
+                 {
+                @*<input type="button" class="btn btn-primary" onclick="btn_Add()" value="添加" />*@
+                
+                <label>查找开始日期：</label>
+                <input type="date" id="txt_s_date" name="txt_s_date" value="@Model.sDate"/>
+                <label>查找结束日期：</label>
+                <input type="date" id="txt_e_date" name="txt_e_date" value="@Model.eDate" />
+                
+                <button type="submit" class="btn btn-primary" >查询</button>
+                    <a href="#" onclick="btn_Excel()">导出数据</a>
+                 }
+            </div>
+        </div>
+    </div>
+    <div id="fmain">
+        @if (ViewData["dt"] != null)
+        { 
+        <table class="table table-bordered table-condensed">
+            <thead class="thead-color">
+                <tr>
+                    <th class="text-center">序号</th>
+                    <th class="text-center">反馈时间</th>
+                    <th class="text-center">描述</th>
+                    <th class="text-center">回复</th>
+                    <th class="text-center">回复时间</th>
+                    <th class="text-center">操作</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                @{int k = 1;}
+                @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["dt"]).Rows)
+                {
+                <tr ondblclick="bdlclick('@dataRow["id"].ToString()','@dataRow["time"].ToString()','@dataRow["remark"].ToString()','@dataRow["remark2"].ToString()','@dataRow["remark3"].ToString()')">
+                    <td>@k</td>
+                    <td>@dataRow["time"].ToString()</td>
+                    <td>@dataRow["remark"].ToString()</td>
+                    <td>@dataRow["remark2"].ToString()</td>
+                    <td>@dataRow["remark3"].ToString()</td>
+                    <td><button class="btn btn-default btn-sm" onclick="btn_Dete(@dataRow["id"].ToString())">删除</button> </td>
+                </tr>
+                    k++;
+                }
+            </tbody>
+        </table>
+        }
+    </div>
+    <div id="ffood">
+        @MvcHtmlString.Create(Common.FoodPage.ShowPageFood((int)ViewData["pageIndex"],(int)ViewData["totalCount"],Model.sDate,Model.eDate,"","",""));
+    </div>

@@ -1,0 +1,119 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script src="../../Scripts/jquery-1.7.2.min_74e92c4.js"></script>
+    <script src="../../Scripts/jquery-1.4.2.js"></script>
+    <script src="../../Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="../../layer/layer.js"></script>
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <title></title>
+    <script>
+        $(function () {
+            var number=sessionStorage["onumber"];
+            var job = sessionStorage["ojob"];
+            var name = sessionStorage["oname"];
+            var datetime = sessionStorage["odatetime"];
+            
+            var sex = sessionStorage["osex"] ;
+            var duty = sessionStorage["oduty"];
+
+            var bid = sessionStorage["obid"];
+            var tel = sessionStorage["otel"];
+            var oarea = sessionStorage["oarea"];
+            var remark = sessionStorage["oremark"];
+
+            $("#txt_number").val(number);
+            $("#txt_name").val(name);
+            $("#txt_job").val(job);
+            $("#txt_date").val(datetime);
+            $("#txt_tel").val(tel);
+            $("#txt_area").val(oarea);
+            $("#txt_remark").val(remark);
+            $("#txt_bid").val(bid);
+
+            var radio = document.getElementsByName("selc_sex");
+            for (var i = 0; i < radio.length; i++) {
+                if (radio[i].value == sex) {
+                    radio[i].checked = true;
+                }
+            }
+
+            var v = document.getElementsByName("selc_duty");
+            for (var i = 0; i < v.length; i++) {
+                if (v[i].value == duty) {
+                    v[i].checked = true;
+                }
+            }
+        });
+        function afterAdd(data) {
+            if (data == "ok") {
+                window.alert("添加成功！");
+            }
+            else if (data == "no") {
+                window.alert("添加失败！");
+            }
+            closeLayer();
+        }
+        function Cancle() {
+            closeLayer();
+        }
+        function closeLayer() {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+            layer.close();
+        }
+    </script>
+</head>
+<body>
+    @using (Ajax.BeginForm("ModifyManger", new AjaxOptions { }, new AjaxOptions() {OnSuccess="afterAdd" }))
+    {
+        <form>
+            <label>编号：</label>
+            <input type="text" id="txt_number" name="txt_number" /><br />
+
+            <label>姓名：</label>
+            <input type="text" id="txt_name" name="txt_name" /><br />
+
+            <label >职位：</label>
+            <input type="text" id="txt_job" name="txt_job" /><br />
+
+            <label>性别：</label>
+            <input type="radio" name="selc_sex" value="男" required="required"  checked="checked"/>男
+            <input type="radio" name="selc_sex" value="女" />女<br />
+
+            <label>出生日期：</label>
+            <input type="date" id="txt_date" name="txt_date" /><br />
+
+            <label>是否在岗：</label>
+            <input type="radio" name="selc_duty" value="1" checked="checked" required="required"/>在岗
+            <input type="radio" name="selc_duty" value="0" />离岗<br />
+
+            <label>负责的楼号：</label>
+            <input type="text" id="txt_bid" name="txt_bid" /><br />
+
+            <label>联系电话：</label>
+            <input type="text" id="txt_tel" name="txt_tel" /><br />
+
+            <label>住址：</label>
+            <input type="text" id="txt_area" name="txt_area" /><br />
+
+            <label>备注：</label>
+            <textarea rows="4" cols="40" id="txt_remark" name="txt_remark"></textarea><br />
+
+            <button type="submit" class="btn btn-primary">确定</button>
+            <button class="btn" onclick="Cancle()">取消</button>
+
+
+        </form>
+
+    }
+</body>
+</html>

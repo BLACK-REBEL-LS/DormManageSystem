@@ -1,0 +1,170 @@
+﻿@model MvcApplication2.Models.FormData
+@{
+    
+    ViewBag.Title = "Discipline";
+}
+
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <script src="../../layer/layer.js"></script>
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/CSS/fooder.css" rel="stylesheet" />
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+
+    <link href="../../Content/CSS/head.css" rel="stylesheet" />
+
+    <script>
+        $(function () {
+            $("#op").attr("src", "../../image/manager/outpeoG.png");
+
+            $("#br").attr("src", "../../image/manager/breakW.png");
+
+            $("#re").attr("src", "../../image/manager/repairG.png");
+            $("#wr").attr("src", "../../image/manager/workerG.png");
+            $("#pt").attr("src", "../../image/manager/stayG.png");
+            $("#st").attr("src", "../../image/manager/seeStuG.png");
+            $("#sch").attr("src", "../../image/manager/stayingG.png");
+            $("#fb").attr("src", "../../image/manager/feedbackG.png");
+            $("#u").attr("src", "../../image/manager/yonhG.png");
+        });
+        function bdlclick(id, dname,sno, dorm, reason,punish ,leader, dtime, remark) {
+            sessionStorage["did"] = id;
+            sessionStorage["dname"] = dname;
+            sessionStorage["dsno"] = sno;
+            sessionStorage["ddorm"] = dorm;
+            sessionStorage["dreason"] = reason;
+            sessionStorage["dpunish"] = punish;
+            sessionStorage["dleader"] = leader;
+            sessionStorage["dtime"] = dtime;
+            sessionStorage["dremark"] = remark;
+            layer.open({
+                type: 2,
+                shade: 0.5,
+                title: "修改信息",
+                shadeClose: true,
+                area: ['450px', '58%'],
+                content: '/Administor/modifyDiscipline',
+                end: function () {
+                    location.reload();
+                }
+            });
+
+        }
+
+        function btn_Dete(id) {
+
+            layer.confirm('确定删除此条记录', {
+                btn: ["确定", "取消"]
+            }, function () {
+                $.ajax({
+                    type: "post",
+                    contentType: "application/json",
+                    url: "/Administor/deleteDiscipline",
+                    data: '{"id":"' + id + '"}',
+                    success: function (result) {
+
+                        layer.alert('操作成功', {
+                            closeBtn: 0,
+                            anim: 4
+                        });
+                        location.reload();
+                    },
+                    error: function () { }
+                });
+            }, function () { });
+
+        }
+        function btn_Excel() {
+            $.ajax({
+                type: "post",
+                contentType: "application/json",
+                url: '/Administor/Discipline_ExportData',
+                success: function (result) {
+                    if (result == "ok") {
+                        alert("导出成功");
+                    }
+                }
+            });
+        }
+
+        function btn_Add()
+        {
+            layer.open({
+                type: 2,
+                shade: 0.5,
+                title: "添加信息",
+                shadeClose: true,
+                area: ['450px', '58%'],
+                content: '/Administor/addDiscipline',
+                end: function () {
+                    location.reload();
+                }
+            });
+        }
+    </script>
+
+    <div id="rhead">
+        <div class="rm">
+            <div class="rm-m">
+                 @using (Ajax.BeginForm("Discipline", new AjaxOptions { }))
+                 {
+                <input type="button" class="btn btn-primary" onclick="btn_Add()" value="添加" />
+                
+                <label>查找开始日期：</label>
+                <input type="date" id="txt_s_date" name="txt_s_date" value="@Model.sDate"/>
+                <label>查找结束日期：</label>
+                <input type="date" id="txt_e_date" name="txt_e_date" value="@Model.eDate" />
+
+                     <label>楼号：</label>
+                     <input type="text" id="txt_id" name="txt_id" value="@Model.Bid" />
+                
+                <button type="submit" class="btn btn-primary" >查询</button>
+                     <a href="#" onclick="btn_Excel()">导出数据</a>
+                 }
+                  </div>
+            </div>
+    </div>
+    <div id="dmain">
+         @if(ViewData["dt"]!=null)
+        {
+        <table class="table table-bordered table-condensed">
+            <thead class="thead-color">
+                <tr>
+                    <th class="text-center">序号</th>
+                    <th class="text-center">姓名</th>
+                    <th class="text-center">学号</th>
+                    <th class="text-center">宿舍号</th>
+                    <th class="text-center">原因</th>
+                    <th class="text-center">处罚</th>
+                    <th class="text-center">批准人</th>
+                    <th class="text-center">时间</th>
+
+                    <th class="text-center">备注</th>
+                    <th class="text-center">操作</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                @{int k = 1;}
+                @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["dt"]).Rows)
+                {
+                <tr ondblclick="bdlclick('@dataRow["id"].ToString()','@dataRow["dname"].ToString()','@dataRow["sno"].ToString()','@dataRow["dorm"].ToString()','@dataRow["reason"].ToString()','@dataRow["punish"].ToString()','@dataRow["leader"].ToString()','@dataRow["dtime"].ToString()','@dataRow["remark"].ToString()')">
+                    <td>@k</td>
+                    <td>@dataRow["dname"].ToString()</td>
+                    <td>@dataRow["sno"].ToString()</td>
+                    <td>@dataRow["dorm"].ToString()</td>
+                    <td>@dataRow["reason"].ToString()</td>
+                    <td>@dataRow["punish"].ToString()</td>
+                    <td>@dataRow["leader"].ToString()</td>
+                    <td>@dataRow["dtime"].ToString()</td>
+                    <td>@dataRow["remark"].ToString()</td>
+                    <td><button class="btn btn-default btn-sm" onclick="btn_Dete(@dataRow["id"].ToString())">删除</button> </td>
+                </tr>
+                    k++;
+                }
+            </tbody>
+        </table>
+        }
+    </div>
+    <div id="dfood">
+        @MvcHtmlString.Create(Common.FoodPage.ShowPageFood((int)ViewData["pageIndex"],(int)ViewData["totalCount"],Model.sDate,Model.eDate,Model.Bid,"",""));
+    </div>
+

@@ -1,0 +1,92 @@
+﻿@model MvcApplication2.Models.FormData
+@{
+    Layout = "~/Views/Stu/SeeStudent.cshtml";
+}
+<link href="../../Content/CSS/fooder.css" rel="stylesheet" />
+<link href="../../Content/CSS/head.css" rel="stylesheet" />
+<script>
+    function btn_Add() {
+        layer.open({
+            type: 2,
+            shade: 0.5,
+            title: "修改信息",
+            shadeClose: true,
+            area: ['450px', '58%'],
+            content: '/Administor/addRepair',
+            end: function () {
+                location.reload();
+            }
+        });
+
+    }
+    function btn_Excle() {
+        var stime = $("#txt_s_date").val();
+        var etime = $("#txt_e_date").val();
+        $.ajax({
+            type: "post",
+            contentType: "application/json",
+            url: '/Login/StuRepair_Export',
+            data: '{"stime":"' + stime + '","etime":"' + etime+ '"}',
+            success: function (result) { if (result == "ok") alert("导出数据成功");}
+        });
+    }
+</script>
+<div id="rhead">
+        <div class="rm">
+            <div class="rm-m">
+                @using (Ajax.BeginForm("StuRepair", new AjaxOptions { }))
+                {
+                    <input type="button" class="btn btn-primary" value="报修" onclick="btn_Add()" />
+                    <label for="txt_s_date">开始时间：</label>
+                    <input type="date" id="txt_s_date" name="txt_s_date" value="@Model.sDate" />
+                    <label for="txt_e_date">结束时间：</label>
+                    <input type="date" id="txt_e_date" name="txt_e_date" value="@Model.eDate" />
+    
+                    <button type="submit" class="btn btn-primary" value="查找">查找</button>
+                    <a href="#" onclick="btn_Excle()">导出数据</a>
+                }
+                </div>
+            </div>
+    </div>
+@if (ViewData["dt"] != null)
+{ 
+    <table class="table table-bordered table-condensed">
+            <thead class="thead-color">
+                <tr>
+                    <th class="text-center">序号</th>
+                    <th class="text-center">报修人姓名</th>
+                    <th class="text-center">宿舍号</th>
+                    <th class="text-center">类别</th>
+                    <th class="text-center">是否处理</th>
+                    <th class="text-center">报修时间</th>
+                    <th class="text-center">完成时间</th>
+                    <th class="text-center">维修人</th>
+                    <th class="text-center">报修学号</th>
+                    <th class="text-center">备注</th>
+                   
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                @{int k = 1;}
+                @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["dt"]).Rows)
+                {
+                <tr>
+                    <td>@k</td>
+                    <td>@dataRow["rname"].ToString()</td>
+                    <td>@dataRow["dorm"].ToString()</td>
+                    <td>@dataRow["category"].ToString()</td>
+                    <td>@dataRow["handle"].ToString()</td>
+                    <td>@dataRow["s_time"].ToString()</td>
+                    <td>@dataRow["e_time"].ToString()</td>
+                    <td>@dataRow["wname"].ToString()</td>
+                    <td>@dataRow["sno"].ToString()</td>
+                    <td>@dataRow["remark"].ToString()</td>
+                </tr>
+                    k++;
+                }
+            </tbody>
+        </table>
+}
+<div id="dfood">
+        @MvcHtmlString.Create(Common.FoodPage.ShowPageFood((int)ViewData["pageIndex"],(int)ViewData["totalCount"],Model.sDate,Model.eDate,"","",""));
+    </div>

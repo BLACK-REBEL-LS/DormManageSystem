@@ -1,0 +1,6 @@
+E:\C#Practice\myPractice\MvcApplication2\Common\bin\Debug\Common.dll
+E:\C#Practice\myPractice\MvcApplication2\Common\bin\Debug\Common.pdb
+E:\C#Practice\myPractice\MvcApplication2\Common\obj\Debug\Common.dll
+E:\C#Practice\myPractice\MvcApplication2\Common\obj\Debug\Common.pdb
+E:\C#Practice\myPractice\MvcApplication2\Common\obj\Debug\Common.csprojResolveAssemblyReference.cache
+E:\C#Practice\myPractice\MvcApplication2\Common\bin\Debug\NPOI.dll

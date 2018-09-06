@@ -1,0 +1,69 @@
+﻿@model Model.LoginModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <title></title>
+    <script src="../../Scripts/jquery-1.7.2.min_74e92c4.js"></script>
+    <script src="../../Scripts/jquery-1.4.2.js"></script>
+    <script src="../../Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="../../layer/layer.js"></script>
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <link href="../../Content/CSS/head.css" rel="stylesheet" />
+    <script>
+        function afterAdd(data) {
+            if (data == "-1") {
+                window.alert("两次密码输入不一致！");
+            }
+            else if (data == "2") {
+                window.alert("修改成功！");
+                closeLayer();
+            }
+            else if (data == "3") {
+                window.alert("修改失败！");
+            }
+
+        }
+        function btn_Cancle() {
+            closeLayer();
+        }
+        function closeLayer() {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+            layer.close();
+        }
+</script>
+
+</head>
+<body>
+                @using (Ajax.BeginForm("modifyStu", new AjaxOptions { }, new AjaxOptions() {OnSuccess="afterAdd" }))
+                {
+                    <label for="txt_sno">编号：</label>
+                    <input type="text" id="txt_sno" name="txt_sno" value="@Model.remark2" disabled="disabled" /><br />
+                    
+                    <label>昵称：</label>
+                    <input type="text" id="txt_name" name="txt_name" value="@Model.name" /><br />
+                    
+                    <label>修改密码：</label>
+                    <input type="password" id="txt_pwd" name="txt_pwd" /><br />
+                    <label>再次输入密码：</label>
+                    <input type="password" id="txt_pwd2" name="txt_pwd2" /><br />
+                    
+                    <label>联系电话：</label>
+                    <input type="text" id="txt_tel" name="txt_tel" value="@Model.remark1" /><br />
+                    
+                    <label>其他备注：</label>
+                    <input type="text" id="txt_remark" name="txt_remark" value="@Model.remark3" /><br />
+                    
+                    <button class="btn btn-primary" type="submit">确定</button>
+                    <button class="btn" onclick="btn_Cancle()">取消</button>
+                }
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script src="../../Scripts/jquery-1.7.2.min_74e92c4.js"></script>
+    <script src="../../Scripts/jquery-1.4.2.js"></script>
+    <script src="../../Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="../../layer/layer.js"></script>
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <title></title>
+    <script>
+        function afterAdd(data) {
+            if (data == "ok") {
+                window.alert("添加成功！");
+            }
+            else if (data == "no") {
+                window.alert("添加失败！");
+            }
+            closeLayer();
+        }
+        function Cancle() {
+            closeLayer();
+        }
+        function closeLayer() {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+            layer.close();
+        }
+    </script>
+</head>
+<body>
+    @using (Ajax.BeginForm("addBuild", new AjaxOptions { }, new AjaxOptions() { OnSuccess = "afterAdd" }))
+    { 
+        <form>
+            <label>编号：</label>
+            <input type="text" id="txt_bid" name="txt_bid" /><br />
+
+            <label>名称: </label>
+            <input type="text" id="txt_name" name="txt_name" /><br />
+
+            <label>地址: </label>
+            <input type="text" id="txt_area" name="txt_area" /><br />
+
+            <label>男寝：</label><input type="radio" name="sex" value="男寝" checked="checked" required="required" />
+            <label>女寝：</label><input type="radio" name="sex" value="女寝" /><br />
+
+            <label>备注: </label>
+            <textarea rows="2" cols="20" id="txt_remark" name="txt_remark"></textarea><br />
+
+            <button type="submit" class="btn btn-primary">确定</button>
+            <button class="btn" onclick="Cancle()">取消</button>
+        </form>
+    }
+</body>
+</html>

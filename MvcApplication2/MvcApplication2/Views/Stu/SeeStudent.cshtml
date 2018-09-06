@@ -1,0 +1,205 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <script src="../../layer/layer.js"></script>
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <title></title>
+    <link href="../../Content/CSS/Administor_Index.css" rel="stylesheet" />
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <style type="text/css">
+        body {
+            background-color:rgb(247,250,255);
+        }
+        #md {
+            height:4px;
+            width:100%;
+            background-color:rgb(255,129,0);
+        }
+        .mleft {
+            margin:20%;
+            height:100%;
+        }
+        /*.main-left {
+            margin-top:60px;
+            width:100%;
+            height:35%;
+            border:1px solid rgb(179,201,238);
+            border-radius:4px;
+            margin-left:20px;
+            background-color:rgb(241,244,251);
+        }*/
+        .main-left {
+            margin-left:80px;
+            width:22%;
+            height:80%;
+            /*border:1px solid black;*/
+        }
+        .main-right {
+            width:68%;
+            height:90%;
+            border:1px solid rgb(179,201,238);
+            margin:20px 20px 0 0;
+            border-radius:4px;
+        }
+        .mainp {
+            width:95%;
+            height:45%;
+            border:1px solid rgb(179,201,238);
+            background-color:rgb(241,244,251);
+            border-radius:4px;
+            margin-top:50px;
+        }
+        #image {
+            display:block;
+            width:64px;
+            height:64px;
+            /*border:1px solid black;*/
+            margin:30px 100px;
+            
+           /* background:url("../../image/Login/girl.png")*/
+        }
+        #mcontent > p {
+            margin-left:40px;
+        }
+        .pline {
+            margin:10px;
+            font-size:14px;
+
+        }
+        /*2018.9.5更改效果*/
+
+        ul li {
+            /*float:left;*/
+            list-style:none;
+           /* width:30%;
+            height:70px;
+            border:1px solid black;*/
+            text-align:center;
+        }
+            /*ul li > a:hover {
+                transform:scale(1,1);
+            }*/
+        #panel {
+            display:none;
+            
+        }
+        #flip {
+            margin:40px 0 0 125px;
+            width:50px;
+            height:50px;
+            /*border:1px solid #c3c3c3;*/
+        }
+    </style>
+    <script>
+        $(function () {
+            var user = sessionStorage["username"];
+            if(typeof(user) == "undefined")
+            {
+                location.href = "../Login/Index";
+            }
+            $("#user").text(user);
+           // $("#image").attr("src", "../../image/Login/girl.png");
+            $.ajax({
+                type: "post",
+                contentType: "application/json",
+                url: "/Stu/GetUserInfo",
+                data: '{"name":"'+user+'"}',
+                async: false,
+                success: function (result) {
+                    
+                    var res = eval(result);
+                    $.each(res, function (i, d) {
+                        if (d.ssex == "男") {
+                            $("#image").attr("src", "../../image/Login/boy.png");
+                        }
+                        else {
+                            $("#image").attr("src", "../../image/Login/girl.png");
+                        }
+                        $("#name").text(d.sname);
+                        $("#sex").text(d.ssex);
+                        $("#dept").text(d.sdept);
+                        $("#dorm").text(d.dorm);
+                        $("#s_time").text(d.s_time);
+
+                    });
+                }
+            });
+            //原来是可以收缩的效果，后来改了，不要这个效果了
+            $("#flip").click(function () {
+                $("#panel").slideToggle("slow");
+            });
+        });
+      
+        //个人信息
+        function btn_OneSelf() {
+            layer.open({
+                type: 2,
+                shade: 0.5,
+                title: "修改信息",
+                shadeClose: true,
+                area: ['400px', '48%'],
+                content: '/Login/StuInfo',
+                end: function () {
+                   // location.reload();
+                }
+            });
+        }
+       
+    </script>
+</head>
+
+<body>
+     <div id="head">
+        <p class="pull-left hr"><img src="../../image/sus.png" height="50" width="50" alt="宿舍" /> 学生宿舍管理系统</p>
+        <p class="pull-right hl">欢迎！<span id="user"></span>|<a href="../Login/Index">注销</a></p>
+    </div>
+    <div id="md"></div>
+    <div id="main">
+        <div class="main-left pull-left">
+            <div class="mainp">
+                <img id="image" />
+                <div id="mcontent">
+                    <p>
+                       <span class="pline">姓名：</span> <span id="name"></span><br />
+                       <span class="pline">性别：</span> <span id="sex"></span><br />
+                       <span class="pline">系院: </span> <span id="dept"></span><br />
+                       <span class="pline">宿舍：</span> <span id="dorm"></span><br />
+                       <span class="pline">入学时间: </span><span id="s_time"></span><br />
+                    
+                    </p>
+                </div>
+
+
+            </div>
+
+            <div id="flip"><a href="#"><img src="../../image/Login/gongn.png" alt="功能" /></a></div>
+            <div id="panel">
+                <ul>
+                    @*<li><a href="#" onclick="btn_OneSelf()"><img src="../../image/Login/your.png" alt="个人信息" /></a></li>*@
+                    <li><a href="../Login/StuRepair"><img src="../../image/Login/yrepair.png" alt="报修情况" /></a></li>
+                    <li><a href="../Login/StuDiscipline"><img src="../../image/Login/ydiscipline.png" alt="违纪情况" /></a></li>
+                    <li><a href="../Login/StuSchool"><img src="../../image/Login/stsch.png" alt="留校申请" /></a></li>
+                </ul>
+
+            </div>
+            @*<div id="function">
+                <ul>
+                    <li><a href="#" onclick="btn_OneSelf()"><img src="../../image/Login/your.png" alt="个人信息" /></a></li>
+                    <li><a href="../Login/StuRepair"><img src="../../image/Login/yrepair.png" alt="报修情况" /></a></li>
+                    <li><a href="../Login/StuDiscipline"><img src="../../image/Login/ydiscipline.png" alt="违纪情况" /></a></li>
+                    <li><a href="../Login/StuSchool"><img src="../../image/Login/stsch.png" alt="留校申请" /></a></li>
+                </ul>
+            </div>*@
+
+        </div>
+        <div id="show" class="main-right pull-right">
+            @RenderBody();
+        </div>
+        
+    </div>
+    <div id="fooder"></div>
+</body>
+</html>

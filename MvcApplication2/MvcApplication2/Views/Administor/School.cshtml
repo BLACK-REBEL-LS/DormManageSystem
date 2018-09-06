@@ -1,0 +1,169 @@
+﻿@model MvcApplication2.Models.FormData
+@{
+    ViewBag.Title = "School";
+    }
+
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <script src="../../layer/layer.js"></script>
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <link href="../../Content/CSS/fooder.css" rel="stylesheet" />
+    <link href="../../Content/CSS/head.css" rel="stylesheet" />
+    <script>
+        $(function () {
+            $("#op").attr("src", "../../image/manager/outpeoG.png");
+            $("#br").attr("src", "../../image/manager/breakG.png");
+            $("#re").attr("src", "../../image/manager/repairG.png");
+            $("#wr").attr("src", "../../image/manager/workerG.png");
+            $("#pt").attr("src", "../../image/manager/stayG.png");
+            $("#st").attr("src", "../../image/manager/seeStuG.png");
+
+            $("#sch").attr("src", "../../image/manager/stayingW.png");
+
+            $("#fb").attr("src", "../../image/manager/feedbackG.png");
+
+            $("#txt_s_date").find("option:contains('@Model.sDate')").attr("selected", true);
+            $("#txt_e_date").find("option:contains('@Model.eDate')").attr("selected", true);
+        });
+        function btn_Dete(id) {
+            layer.confirm('确定删除此条记录', {
+                btn: ["确定", "取消"]
+            }, function () {
+                $.ajax({
+                    type: "post",
+                    contentType: "application/json",
+                    url: "/Administor/deleteSchool",
+                    data: '{"id":"' + id + '"}',
+                    success: function (result) {
+
+                        layer.alert('操作成功', {
+                            closeBtn: 0,
+                            anim: 4
+                        });
+                        location.reload();
+                    },
+                    error: function () { }
+                });
+            }, function () { });
+        }
+
+        function bdlclick(id, name, sno, s_time, e_time, pdorm, odorm, leader, tel,remark) {
+            sessionStorage["sid"] = id;
+            sessionStorage["sname"] = name;
+            sessionStorage["scsno"] = sno;
+            sessionStorage["shs_time"] = s_time;
+            sessionStorage["she_time"] = e_time;
+            sessionStorage["spdorm"] = pdorm;
+            sessionStorage["sodorm"] = odorm;
+            sessionStorage["sleader"] = leader;
+            sessionStorage["stel"] = tel;
+            sessionStorage["rremark"] = remark;
+            layer.open({
+                type: 2,
+                shade: 0.5,
+                title: "修改信息",
+                shadeClose: true,
+                area: ['450px', '58%'],
+                content: '/Administor/modifySchool',
+                end: function () {
+                    location.reload();
+                }
+            });
+        }
+
+        function btn_Add() {
+            layer.open({
+                type: 2,
+                shade: 0.5,
+                title: "修改信息",
+                shadeClose: true,
+                area: ['450px', '58%'],
+                content: '/Administor/addSchool',
+                end: function () {
+                    location.reload();
+                }
+            });
+        }
+        function btn_Excel() {
+            $.ajax({
+                type: "post",
+                contentType: "application/json",
+                url: '/Administor/School_ExportData',
+                success: function (result) {
+                    if (result == "ok") {
+                        alert("导出成功");
+                    }
+                }
+            });
+        }
+    </script>
+     <div id="rhead">
+        <div class="rm">
+            <div class="rm-m">
+                 @using (Ajax.BeginForm("School", new AjaxOptions { }))
+                 { 
+                 <input type="button" class="btn btn-primary" onclick="btn_Add()" value="添加" />
+                     <label>学年：</label>
+                     <select name="txt_s_date" id="txt_s_date">
+                         @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["year"]).Rows)
+                         {
+                         <option value="@dataRow["schyear"].ToString()">@dataRow["schyear"].ToString()</option>
+                         }
+                     </select>
+                     <label>假期：</label>
+                     <select name="txt_e_date" id="txt_e_date">
+                         <option value="寒假">寒假</option>
+                         <option value="暑假">暑假</option>
+                     </select>
+                     <button type="submit" class="btn btn-primary">查询</button>
+                     <a href="#" onclick="btn_Excel()">导出数据</a>
+                 }
+            </div>
+        </div>
+    </div>
+    <div id="smain">
+         @if (ViewData["dt"] != null)
+         {
+        <table class="table table-bordered table-condensed">
+            <thead class="thead-color">
+                <tr>
+                    <th class="text-center">序号</th>
+                    <th class="text-center">姓名</th>
+                    <th class="text-center">学号</th>
+                    <th class="text-center">开始时间</th>
+                    <th class="text-center">结束时间</th>
+                    <th class="text-center">现住宿舍</th>
+                    <th class="text-center">原宿舍</th>
+                    <th class="text-center">批准人</th>
+                    <th class="text-center">联系电话</th>
+                    <th class="text-center">备注</th>
+                    <th class="text-center">操作</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                @{int k = 1;}
+                @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["dt"]).Rows)
+                {
+                <tr ondblclick="bdlclick('@dataRow["id"].ToString()','@dataRow["name"].ToString()','@dataRow["sno"].ToString()','@dataRow["s_time"].ToString()','@dataRow["e_time"].ToString()','@dataRow["pdorm"].ToString()','@dataRow["odorm"].ToString()','@dataRow["leader"].ToString()','@dataRow["tel"].ToString()','@dataRow["remark"].ToString()')">
+                    <td>@k</td>
+                    <td>@dataRow["name"].ToString()</td>
+                    <td>@dataRow["sno"].ToString()</td>
+                    <td>@dataRow["s_time"].ToString()</td>
+                    <td>@dataRow["e_time"].ToString()</td>
+                    <td>@dataRow["pdorm"].ToString()</td>
+                    <td>@dataRow["odorm"].ToString()</td>
+                    <td>@dataRow["leader"].ToString()</td>
+                    <td>@dataRow["tel"].ToString()</td>
+                    <td>@dataRow["remark"].ToString()</td>
+                    <td><button class="btn btn-default btn-sm" onclick="btn_Dete(@dataRow["id"].ToString())">删除 </button></td>
+                </tr>
+                    k++;
+                }
+            </tbody>
+        </table>
+         }
+    </div>
+
+    <div id="sfood">
+        @MvcHtmlString.Create(Common.FoodPage.ShowPageFood((int)ViewData["pageIndex"],(int)ViewData["totalCount"],Model.sDate,Model.eDate,"","",""));
+    </div>

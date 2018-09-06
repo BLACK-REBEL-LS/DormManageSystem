@@ -1,0 +1,157 @@
+﻿@model MvcApplication2.Models.FormData
+@{
+    ViewBag.Title = "User";
+}
+<link href="../../Content/CSS/fooder.css" rel="stylesheet" />
+<link href="../../Content/CSS/head.css" rel="stylesheet" />
+<script>
+    $(function () {
+        $("#op").attr("src", "../../image/manager/outpeoG.png");
+
+        $("#br").attr("src", "../../image/manager/breakG.png");
+
+        $("#re").attr("src", "../../image/manager/repairG.png");
+        $("#wr").attr("src", "../../image/manager/workerG.png");
+        $("#pt").attr("src", "../../image/manager/stayG.png");
+        $("#st").attr("src", "../../image/manager/seeStuG.png");
+        $("#sch").attr("src", "../../image/manager/stayingG.png");
+        $("#fb").attr("src", "../../image/manager/feedbackG.png");
+        $("#fb").attr("src", "../../image/manager/feedbackG.png");
+
+        $("#u").attr("src", "../../image/manager/yongW.png");
+        $("#role").find("option:contains('@Model.sDate')").attr("selected", true);
+    });
+    function btn_Dete(id) {
+
+        layer.confirm('确定删除此条记录', {
+            btn: ["确定", "取消"]
+        }, function () {
+            $.ajax({
+                type: "post",
+                contentType: "application/json",
+                url: "/Administor/deleteUser",
+                data: '{"id":"' + id + '"}',
+                success: function (result) {
+
+                    layer.alert('操作成功', {
+                        closeBtn: 0,
+                        anim: 4
+                    });
+                    location.reload();
+                },
+                error: function () { }
+            });
+        }, function () { });
+
+    }
+    function btn_Excel() {
+        var role = $("#role").val();
+       // var sno = $("#txt_sno").val();
+        $.ajax({
+            type: "post",
+            contentType: "application/json",
+            url: '/Administor/User_Export',
+            data:'{"role":"'+role+'"}',
+            success: function (result) {
+                if (result == "ok") {
+                    alert("导出成功");
+                }
+            }
+        });
+    }
+    function bdlclick( name, role,remark1,remark2,remark3) {
+        
+        sessionStorage["uname"] = name;
+        sessionStorage["usno"] = remark2;
+        sessionStorage["urole"] = role;
+        sessionStorage["utel"] = remark1;
+        sessionStorage["uremark3"] = remark3;
+        
+        layer.open({
+            type: 2,
+            shade: 0.5,
+            title: "修改信息",
+            shadeClose: true,
+            area: ['450px', '58%'],
+            content: '/Administor/modifyUser',
+            end: function () {
+                location.reload();
+            }
+        });
+
+    }
+    function btn_Add()
+    {
+        layer.open({
+            type: 2,
+            shade: 0.5,
+            title: "修改信息",
+            shadeClose: true,
+            area: ['450px', '58%'],
+            content: '/Administor/addUser',
+            end: function () {
+                location.reload();
+            }
+        });
+    }
+</script>
+<div id="rhead">
+        <div class="rm">
+            <div class="rm-m">
+                 @using (Ajax.BeginForm("User", new AjaxOptions { }))
+                 {
+                <input type="button" class="btn btn-primary" onclick="btn_Add()" value="添加" />
+                
+                <label>权限：</label>
+                <select id="role" name="txt_s_date">
+                        @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["dd"]).Rows)
+                        {
+                            <option value="@dataRow["role"].ToString()">@dataRow["role"].ToString()</option>
+                        }
+                        </select>
+                <label>编号：</label>
+                <input type="text" id="txt_e_date" name="txt_e_date" value="@Model.eDate" />
+                
+                <button type="submit" class="btn btn-primary" >查询</button>
+                     <a href="#" onclick="btn_Excel()">导出数据</a>
+                 }
+                  </div>
+            </div>
+    </div>
+    <div id="dmain">
+         @if (ViewData["dt"] != null)
+         {
+        <table class="table table-bordered table-condensed">
+            <thead class="thead-color">
+                <tr>
+                    <th class="text-center">序号</th>
+                    <th class="text-center">昵称</th>
+                    <th class="text-center">学号</th>
+                    <th class="text-center">权限</th>
+                    <th class="text-center">联系电话</th>
+                    <th class="text-center">备注</th>
+                    <th class="text-center">操作</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                @{int k = 1;}
+                @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["dt"]).Rows)
+                {
+                <tr ondblclick="bdlclick('@dataRow["name"].ToString()','@dataRow["role"].ToString()','@dataRow["remark1"].ToString()','@dataRow["remark2"].ToString()','@dataRow["remark3"].ToString()')">
+                    <td>@k</td>
+                    <td>@dataRow["name"].ToString()</td>
+                    <td>@dataRow["remark2"].ToString()</td>
+                    <td>@dataRow["role"].ToString()</td>
+                    <td>@dataRow["remark1"].ToString()</td>
+                    <td>@dataRow["remark3"].ToString()</td>
+                    <td><button class="btn btn-default btn-sm" onclick="btn_Dete(@dataRow["id"].ToString())">删除</button> </td>
+                </tr>
+                    k++;
+                }
+            </tbody>
+        </table>
+         }
+    </div>
+    <div id="dfood">
+        @MvcHtmlString.Create(Common.FoodPage.ShowPageFood((int)ViewData["pageIndex"],(int)ViewData["totalCount"],Model.sDate,Model.eDate,"","",""));
+    </div>

@@ -1,0 +1,138 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <script src="../../Scripts/bootstrap.js"></script>
+    <script src="../../layer/layer.js"></script>
+
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <title></title>
+    <style type="text/css">
+        #sf {
+            color:red;
+            font-size:12px;
+            font-weight:lighter;
+        }
+    </style>
+    <script>
+        
+        $(document).ready(function () {
+            var sno = sessionStorage["sno"];
+            // $("#sno").val(sno);
+            //alert(sno);
+           // var sno = '1606915052';
+            
+            $.ajax({
+                type: "post",
+                url: "/Stu/Select_Sno",
+                data:'{"sno":"'+sno+'"}',
+                dataType: "json",
+                async: false,
+                success: function (result) {
+                    var res = eval(result);
+                    $.each(res, function (i, d) {
+
+                        if (d.school > 0)
+                            $("#sf").text("*在校学生");
+                        else $("#sf").text("*该学生已毕业");
+
+                        $("#sno").val(d.sno);
+                        $("#sname").val(d.sname);
+                        $("#sdept").val(d.sdept);
+                        $("#dorm").val(d.dorm);
+                        $("#s_time").val(d.s_time);
+                        $("#e_time").val(d.e_time);
+                        $("#m_time").val(d.m_time);
+                    });
+                },
+                error: function () { }
+            });
+            
+            $("#btn_sure").click(function () {
+                modifySure();
+            });
+  
+        });
+        function modifySure()
+        {
+            var sno=$("#sno").val();
+            var sdept = $("#sdept").val();
+            var dorm = $("#dorm").val();
+            var e_time = $("#e_time").val();
+            var m_time = $("#m_time").val();
+            $.ajax({
+
+                type: "post",
+                contentType: 'application/json',
+                url: 'Stu/ModifyStudent',
+                data: '{"sno":"'+sno+'","sdept":"'+sdept+'","dorm":"'+dorm+'","e_time":"'+e_time+'","m_time":"'+m_time+'"}',
+                dataType: 'text',
+                async: false,
+                success: function (result) {
+                    if (result == "OK") {
+                        alert("成功修改");
+                    }
+                    else
+                        alert("修改失败");
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(XMLHttpRequest);
+                    alert(textStatus);
+                    alert(errorThrown);
+                }
+            });
+        }
+
+        //function afterModify(data)
+        //{
+        //    closeLayer();
+        //}
+
+        //function closeLayer()
+        //{
+        //    var index = parent.layer.getFrameIndex(window.name);
+        //    parent.layer.close(index);
+        //    layer.close();
+        //}
+
+        //function Cancle()
+        //{
+        //    closeLayer();
+        //}
+    </script>
+</head>
+<body>
+   <p>学号：<input type="text" id="sno" disabled="disabled" /></p>
+    <p>姓名：<input type="text" id="sname" disabled="disabled" /><label id="sf"></label></p>
+    <p>系别：<input type="text" id="sdept" /></p>
+    <p>宿舍号：<input type="text" id="dorm" /></p>
+    <p>入学时间：<input type="datetime" id="s_time" disabled="disabled" /></p>
+    <p>拟毕业时间：<input type="datetime" id="e_time" /></p>
+    <p>修改时间：<input type="date" id="m_time" /></p>
+    <button id="btn_sure" class="btn btn-primary">确定</button>
+
+
+   @* @using (Ajax.BeginForm("ModifyStu", new { }, new AjaxOptions() { OnSuccess = "afterModify" }))
+    {
+        <form>
+            
+            <p>学号：<input type="text" id="sno" disabled="disabled" /></p>
+            <p>姓名：<input type="text" id="sname" disabled="disabled" /><label id="sf"></label></p>
+            <p>系别：<input type="text" id="sdept" /></p>
+            <p>宿舍号：<input type="text" id="dorm" /></p>
+            <p>入学时间：<input type="datetime" id="s_time" disabled="disabled" /></p>
+            <p>拟毕业时间：<input type="datetime" id="e_time" /></p>
+            <p>修改时间：<input type="date" id="m_time" /></p>
+            <button id="btn_sure" class="btn btn-primary">确定</button>
+        </form>
+    }*@
+   
+</body>
+</html>

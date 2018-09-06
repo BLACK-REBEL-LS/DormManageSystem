@@ -1,0 +1,12 @@
+E:\C#Practice\myPractice\MvcApplication2\BLL\bin\Debug\BLL.dll
+E:\C#Practice\myPractice\MvcApplication2\BLL\bin\Debug\BLL.pdb
+E:\C#Practice\myPractice\MvcApplication2\BLL\bin\Debug\DAL.dll
+E:\C#Practice\myPractice\MvcApplication2\BLL\bin\Debug\Model.dll
+E:\C#Practice\myPractice\MvcApplication2\BLL\bin\Debug\Common.dll
+E:\C#Practice\myPractice\MvcApplication2\BLL\bin\Debug\DAL.pdb
+E:\C#Practice\myPractice\MvcApplication2\BLL\bin\Debug\Model.pdb
+E:\C#Practice\myPractice\MvcApplication2\BLL\bin\Debug\Common.pdb
+E:\C#Practice\myPractice\MvcApplication2\BLL\obj\Debug\BLL.csprojResolveAssemblyReference.cache
+E:\C#Practice\myPractice\MvcApplication2\BLL\obj\Debug\BLL.dll
+E:\C#Practice\myPractice\MvcApplication2\BLL\obj\Debug\BLL.pdb
+E:\C#Practice\myPractice\MvcApplication2\BLL\bin\Debug\NPOI.dll

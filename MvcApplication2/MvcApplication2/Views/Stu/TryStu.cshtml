@@ -1,0 +1,161 @@
+﻿@model MvcApplication2.Models.FormData
+@{
+    ViewBag.Title = "TryStu";
+}
+<link href="../../Content/CSS/fooder.css" rel="stylesheet" />
+<link href="../../Content/CSS/head.css" rel="stylesheet" />
+<script>
+    $(function () {
+        $("#op").attr("src", "../../image/manager/outpeoG.png");
+        $("#br").attr("src", "../../image/manager/breakG.png");
+        $("#re").attr("src", "../../image/manager/repairG.png");
+        $("#wr").attr("src", "../../image/manager/workerG.png");
+        $("#pt").attr("src", "../../image/manager/stayG.png");
+
+        $("#st").attr("src", "../../image/manager/seeStuW.png");
+
+        $("#sch").attr("src", "../../image/manager/stayingG.png");
+        $("#fb").attr("src", "../../image/manager/feedbackG.png");
+
+        $("#txt_s_date").find("option:contains('@Model.sDate')").attr("selected", true);
+        $("#txt_e_date").find("option:contains('@Model.eDate')").attr("selected", true);
+        $(":radio[name='txt_id'][value='@Model.Bid']").prop("checked", "checked");
+    });
+    //判断是否在校
+    function sfSchool() {
+        var school = "";
+        var v = document.getElementsByName("txt_id");//获得name="sex"的集合
+        for (var i = 0; i < v.length; i++) {
+            if (v[i].checked) {
+                school = v[i].value;
+            }
+        }
+        sessionStorage["school"] = school;
+    }
+    //修改
+    function bdlclick(sno) {
+        sessionStorage["sno"] = sno;
+        sfSchool();
+
+        layer.open({
+            type: 2,
+            shade: 0.5,
+            title: '修改学生信息',
+            shadeClose: true,
+            area: ['450px', '58%'],
+            content: "/Stu/mod_Stu",
+            end: function () {
+                location.reload();
+            }
+        })
+    }
+
+    //添加
+    function btn_Add() {
+        layer.open({
+            type: 2,
+            shade: 0.5,
+            title: '修改学生信息',
+            shadeClose: true,
+            area: ['450px', '58%'],
+            content: "/Stu/addStu",
+            end: function () {
+                location.reload();
+            }
+        })
+    }
+
+    //导出数据
+    function btn_Excel() {
+        var grade = $("#txt_s_date").val();
+        var dept = $("#txt_e_date").val();
+        var sch = $("input[name='txt_id']:checked").val();
+        $.ajax({
+            type: "post",
+            contentType: "application/json",
+            url: "/Stu/TryStu_Export",
+            data: '{"grade":"'+grade+'","dept":"'+dept+'","sch":"'+sch+'"}',
+            success: function (result) {
+                if (result == "ok")
+                    alert("导出成功");
+            }
+        });
+    }
+</script>
+ <div id="rhead">
+        <div class="rm">
+            <div class="rm-m">
+                 @using (Ajax.BeginForm("TryStu", new AjaxOptions { }))
+                 {
+                    <input type="button" class="btn btn-primary" onclick="btn_Add()" value="添加" />
+                    
+                     <label>年级：</label>
+                     <select id="txt_s_date" name="txt_s_date">
+                         @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["gra"]).Rows)
+                         { 
+                            <option value="@dataRow["g"].ToString()">@dataRow["g"].ToString()</option>
+                         }
+                     </select>
+                     
+                     <label>院系：</label>
+                     <select id="txt_e_date" name="txt_e_date">
+                         @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["dep"]).Rows)
+                         { 
+                           <option value="@dataRow["sdept"].ToString()">@dataRow["sdept"].ToString()</option>
+                         }
+                     </select>
+                     
+                    <label>学号</label>
+                    <input type="text" id="seno" name="seno"/>
+        
+                    <input type="radio" name="txt_id" checked="checked" value="1" /><label>在校</label>
+        
+                    <input type="radio" name="txt_id" value="0" /><label>不在校</label>
+                
+                    <button type="submit" class="btn btn-primary" >查询</button>
+                     <a href="#" onclick="btn_Excel()">导出数据</a>
+                 }
+                  </div>
+            </div>
+    </div>
+<div id="smain">
+    @if (ViewData["dt"] != null)
+    { 
+     <table class="table table-bordered table-condensed">
+            <thead class="thead-color">
+                <tr>
+                    <th class="text-center">序号</th>
+                    <th class="text-center">学号</th>
+                    <th class="text-center">姓名</th>
+                    <th class="text-center">性别</th>
+                    <th class="text-center">系别</th>
+                    <th class="text-center">宿舍</th>
+                    <th class="text-center">入学时间</th>
+                    <th class="text-center">拟毕业时间</th>
+                    <th class="text-center">修改时间</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                @{int k = 1;}
+                @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["dt"]).Rows)
+                {
+                <tr ondblclick="bdlclick('@dataRow["sno"].ToString()')">
+                    <td>@k</td>
+                    <td>@dataRow["sno"].ToString()</td>
+                    <td>@dataRow["sname"].ToString()</td>
+                    <td>@dataRow["ssex"].ToString()</td>
+                    <td>@dataRow["sdept"].ToString()</td>
+                    <td>@dataRow["dorm"].ToString()</td>
+                    <td>@dataRow["s_time"].ToString()</td>
+                    <td>@dataRow["e_time"].ToString()</td>
+                    <td>@dataRow["m_time"].ToString()</td>
+                </tr>
+                    k++;
+                }
+            </tbody>
+        </table>
+    }
+</div>
+<div id="sfood">
+    @MvcHtmlString.Create(Common.FoodPage.ShowPageFood((int)ViewData["pageIndex"],(int)ViewData["totalCount"],Model.sDate,Model.eDate,Model.Bid,"",""));
+</div>

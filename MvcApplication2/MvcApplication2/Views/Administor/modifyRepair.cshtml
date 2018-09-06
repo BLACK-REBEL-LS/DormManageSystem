@@ -1,0 +1,113 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="../../Scripts/jquery-1.7.2.min_74e92c4.js"></script>
+    <script src="../../Scripts/jquery-1.4.2.js"></script>
+    <script src="../../Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="../../layer/layer.js"></script>
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <title></title>
+    <script>
+        $(function () {
+           var id= sessionStorage["rid"];
+           var rname= sessionStorage["rname"];
+           var dorm= sessionStorage["rdorm"];
+           var category= sessionStorage["rcategory"];
+           var handle= sessionStorage["rhandle"];
+           var s_time= sessionStorage["rs_time"];
+           var e_time= sessionStorage["re_time"];
+           var wname = sessionStorage["rwname"];
+           var sno = sessionStorage["rsno"];
+           var remark = sessionStorage["rremark"];
+           $("#txt_id").val(id);
+           $("#txt_rname").val(rname);
+           $("#txt_dorm").val(dorm);
+           $("#txt_category").val(category);
+           $("#txt_s_time").val(s_time);
+           $("#txt_e_time").val(e_time);
+           $("#txt_wname").val(wname);
+           $("#txt_remark").val(remark);
+           $("#txt_sno").val(sno);
+
+           var v = document.getElementsByName("handle");
+           for (var i = 0; i < v.length; i++) {
+               if (v[i].value == handle) {
+                   v[i].checked = true;
+               }
+           }
+
+        });
+        function afterAdd(data) {
+            if (data == "ok") {
+                window.alert("修改成功！");
+            }
+            else if (data == "no") {
+                window.alert("修改失败！");
+            }
+            closeLayer();
+        }
+        function Cancle() {
+            closeLayer();
+        }
+        function closeLayer() {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+            layer.close();
+        }
+    </script>
+</head>
+<body>
+     @using (Ajax.BeginForm("modifyRepair", new AjaxOptions { }, new AjaxOptions() { OnSuccess = "afterAdd" }))
+    {
+        <form>
+            <label>编号：</label>
+            <input type="text" id="txt_id" name="txt_id" />
+
+            <label>报修人：</label>
+            <input type="text" id="txt_rname" name="txt_rname" /><br />
+
+            <label>宿舍号：</label>
+            <input type="text" id="txt_dorm" name="txt_dorm" /><br />
+
+            <label>类别：</label>
+            <input type="text" id="txt_category" name="txt_category" /><br />
+
+            
+            <input type="radio" name="handle" checked="checked" value="1" /><label>已处理：</label><br />
+            
+            <input type="radio" name="handle" value="0" /><label>未处理：</label><br />
+
+            <label>报修时间：</label>
+            <input type="datetime" id="txt_s_time" name="txt_s_time" /><br />
+
+            <label>完成时间：</label>
+            <input type="datetime" id="txt_e_time" name="txt_e_time" /><br />
+
+            <label>维修人：</label>
+            <input type="text" id="txt_wname" name="txt_wname" /><br />
+
+            <label>学号：</label>
+            <input type="text" id="txt_sno" name="txt_sno" /><br />
+
+            <label>备注：</label>
+            <input type="text" id="txt_remark" name="txt_remark" /><br />
+
+            
+
+            <button type="submit" class="btn btn-primary">确定</button>
+            
+            <button class="btn" onclick="Cancle()">取消</button>
+        
+
+        </form>
+
+    }
+</body>
+</html>

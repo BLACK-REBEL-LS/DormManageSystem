@@ -1,0 +1,390 @@
+﻿@*学生管理的页面*@
+@{
+    ViewBag.Title = "StuIndex";
+}
+
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <script src="../../Scripts/bootstrap.js"></script>
+    <script src="../../layer/layer.js"></script>
+
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+<link href="../../Content/CSS/head.css" rel="stylesheet" />
+    <style type="text/css">
+        .thead-color {
+            background-color:rgb(66,85,117);
+            color:white;
+        }
+        table tbody tr:nth-child(even) {
+            background-color:rgb(235,241,255);
+        }
+        table tbody tr:nth-child(odd) {
+            background-color:rgb(247,250,255);
+        }
+        table tbody tr:hover {
+            background-color:rgb(109,148,207);
+            color:white;
+        }
+        .pagecss {
+            display:block;
+            float:left;
+            width:70px;
+            height:30px;
+            background-color:rgb(59,74,97);
+            color:white;
+            text-align:center;
+            font-size:12px;
+            padding:6px;
+        }
+        .p {
+            display:block;
+            float:left;
+            width:30px;
+            height:30px;
+            background-color:rgb(59,74,97);
+            color:white;
+            margin-left:5px;
+            margin-right:5px;
+            text-align:center;
+            font-size:12px;
+            padding:6px;
+        }
+        .p1 {
+            display:block;
+            float:left;
+            width:30px;
+            height:30px;
+            background-color:white;
+            color:rgb(152,153,157);
+            text-align:center;
+            padding:6px;
+        }
+        #sbottom>a:hover {
+            background-color:rgb(13,164,211);
+            text-decoration:none;
+            color:white;
+        }
+    </style>
+    <script>
+        $(function () {
+            $("#op").attr("src", "../../image/manager/outpeoG.png");
+            $("#br").attr("src", "../../image/manager/breakG.png");
+            $("#re").attr("src", "../../image/manager/repairG.png");
+            $("#wr").attr("src", "../../image/manager/workerG.png");
+            $("#pt").attr("src", "../../image/manager/stayG.png");
+
+            $("#st").attr("src", "../../image/manager/seeStuW.png");
+
+            $("#sch").attr("src", "../../image/manager/stayingG.png");
+            $("#fb").attr("src", "../../image/manager/feedbackG.png");
+
+            PresentPagenum = 1;
+            totalpage = 0;
+            pagecount = 0;
+            school="";
+            sfSchool();
+          //  function pageALL() {
+                var tpage;
+                $.ajax({
+                    type: "post",
+                    contentType: "application/json",
+                    url: "/Stu/pageAll",
+                    data:'{"school":"'+school+'"}',
+                    dataType: "json",
+                    async: "false",
+                    success: function (result) {
+                        //alert(result);
+                        var total = result;//总行数
+                        tpage = Math.ceil(total / 17.0);//总页数
+
+
+                        totalpage = total;
+                        pagecount = tpage;
+                        // alert(totalpage);
+                        $("#tpage").text(tpage);
+                        $(".1").css({ "background-color": "white", "color": "rgb(152, 153, 157)" });
+                        var pagenum = 1;
+                        updataPage(pagenum, totalpage);
+                    },
+                    error: function () { }
+                });
+           // }
+            
+            //$("#prepage").click(function () {
+            //    Prepage();
+            //});
+            //$("#nextpage").click(function () {
+            //    NextPage();
+            //});
+
+            $("#1").click(function () {
+                var pnum = 1;
+                updataPage(pnum, totalpage);
+            });
+            $("#2").click(function () {
+                var pnum=2;
+                if (pnum > pagecount)
+                {
+                    pnum = 1;
+                }
+                updataPage(pnum,totalpage);
+            });
+            $("#3").click(function () {
+                var pnum = 3;
+                if(pnum>pagecount)
+                {
+                    pnum = pagecount;
+                }
+                updataPage(pnum,totalpage);
+            });
+
+            //查找
+            $("#selectStu").click(function () {
+                var sno = $("#seno").val();
+                sfSchool();
+                if (sno =="") {
+                    pageALL();
+                }
+
+                else {
+                    $.ajax({
+                        type: 'post',
+                        contentType: 'application/json',
+                        url: '/Stu/Select_Sno',
+                        data: '{"sno":"' + sno + '","school":"'+school+'"}',
+                        dataType: "json",
+                        async: false,
+                        success: function (result) {
+                            var htmltxt = "<table class=\"table table-bordered table-condensed\"><thead class=\"thead-color\"><tr><th class=\"text-center\">序号</th><th class=\"text-center\">学号</th><th class=\"text-center\">姓名</th><th class=\"text-center\">性别</th><th class=\"text-center\">系别</th><th class=\"text-center\">宿舍号</th><th class=\"text-center\">入学时间</th><th class=\"text-center\">拟毕业时间</th><th class=\"text-center\">修改时间</th></tr></thead><tbody class=\"text-center\">";
+                            var res = eval(result);
+                            var k = 1;
+                            $.each(res, function (i, d) {
+                                var sname = d.sname;
+                                var ssex = d.ssex;
+                                var sdept = d.sdept;
+                                var dorm = d.dorm;
+                                var s_time = d.s_time;
+                                var e_time = d.e_time;
+                                var m_time = d.m_time;
+                                htmltxt += "<tr ondblclick='dblclick(" + d.sno + ")'><td>" + k + "</td><td>" + d.sno + "</td><td>" + d.sname + "</td><td>" + d.ssex + "</td><td>" + d.sdept + "</td><td>" + d.dorm + "</td><td>" + d.s_time + "</td><td>" + d.e_time + "</td><td>" + d.m_time + "</td></tr>";
+
+                                k++;
+                            });
+                            htmltxt += "</tbody></table>";
+                            $("#smiddle").html(htmltxt);
+                            $("#tpage").text("1");
+                        },
+                        error: function () { }
+                    });
+                }
+            });
+
+            
+            
+        });
+
+        //判断是否在校
+        function sfSchool()
+        {
+            
+            var v = document.getElementsByName("sex");//获得name="sex"的集合
+            for (var i = 0; i < v.length; i++)
+            {
+                if (v[i].checked) {
+                    school = v[i].value;
+                }
+            }
+        }
+
+       function pageALL() {
+           var tpage;
+           var pagenumj = 1;
+            $.ajax({
+                type: "post",
+                contentType: "application/json",
+                url: "/Stu/pageAll",
+                data:'{"school":"'+school+'"}',
+                dataType: "json",
+                async: "false",
+                success: function (result) {
+                    
+                    var total = result;//总行数
+                    tpage = Math.ceil(total / 18.0);//总页数
+
+                    totalpage = total;
+                    updataPage(pagenumj, totalpage);
+                    $("#tpage").text(tpage);
+                    
+                },
+                error: function () { }
+            });
+            var pagenum = 1;
+            
+        }
+
+        //上一页
+        function Prepage()
+        {
+            var pagenum = PresentPagenum - 1;
+            PresentPagenum = pagenum;
+            updataPage(pagenum,totalpage);
+
+        }
+        //下一页
+        function NextPage()
+        {
+            var pagenum = PresentPagenum + 1;
+            PresentPagenum = pagenum;
+            updataPage(pagenum,totalpage);
+        }
+        
+        
+
+        function updataPage(pagenum, totalpage) {
+            var pagesize = 17;
+           // alert(pagenum);
+           // alert(totalpage);
+            if ((pagenum - 1) * pagesize >= totalpage) {
+                pagenum = Math.ceil(totalpage / (pagesize * 1.0));
+            }
+            else if (pagenum <= 0) {
+                pagenum = 1;
+            }
+            if (pagenum <= 3) {
+                switch (pagenum) {
+                    case 1:
+                        $("#1").css({ "background": "white", "color": "rgb(152, 153, 157)" });
+                        $("#2").css({ "background": "rgb(59,74,97)", "color": "white" });
+                        $("#3").css({ "background": "rgb(59,74,97)", "color": "white" });
+                        break;
+                    case 2:
+                        $("#2").css({ "background": "white", "color": "rgb(152, 153, 157)" });
+                        $("#1").css({ "background": "rgb(59,74,97)", "color": "white" });
+                        $("#3").css({ "background": "rgb(59,74,97)", "color": "white" });
+                        break;
+                    case 3:
+                        $("#3").css({ "background": "white", "color": "rgb(152, 153, 157)" });
+                        $("#1").css({ "background": "rgb(59,74,97)", "color": "white" });
+                        $("#2").css({ "background": "rgb(59,74,97)", "color": "white" });
+                        break;
+                }
+
+            }
+            var statIndex = pagesize * (pagenum - 1);//开始 行数
+            var endIndex = pagesize * (pagenum);//结束 行数
+             var k = 1;
+
+            $.ajax({
+                type: "post",
+                contentType: "application/json",
+                url: "/Stu/selectStuAll",
+                data: '{"starIndex":"' + statIndex + '","endIndex":"' + endIndex + '","school":"'+school+'"}',
+                async: false,
+                success: function (result) {
+                    var htmltxt = "<table class=\"table table-bordered table-condensed\"><thead class=\"thead-color\"><tr><th class=\"text-center\">序号</th><th class=\"text-center\">学号</th><th class=\"text-center\">姓名</th><th class=\"text-center\">性别</th><th class=\"text-center\">系别</th><th class=\"text-center\">宿舍号</th><th class=\"text-center\">入学时间</th><th class=\"text-center\">拟毕业时间</th><th class=\"text-center\">修改时间</th></tr></thead><tbody class=\"text-center\">";
+                   
+                    var res = eval(result);
+                    $.each(res, function (i, d) {
+                        var sname = d.sname;
+                        var ssex = d.ssex;
+                        var sdept = d.sdept;
+                        var dorm = d.dorm;
+                        var s_time = d.s_time;
+                        var e_time = d.e_time;
+                        var m_time = d.m_time;
+                        htmltxt += "<tr ondblclick='dblclick(" + d.sno + ")'><td>" + k + "</td><td>" + d.sno + "</td><td>" + d.sname + "</td><td>" + d.ssex + "</td><td>" + d.sdept + "</td><td>" + d.dorm + "</td><td>" + d.s_time + "</td><td>" + d.e_time + "</td><td>" + d.m_time + "</td></tr>";
+                        
+                        k++;
+                    });
+                    htmltxt += "</tbody></table>";
+                    $("#smiddle").html(htmltxt);
+                },
+                error: function () { }
+            });
+        }
+        //添加事件
+        function add()
+        {
+            layer.open({
+                type: 2,
+                shade: 0.5,
+                title: '修改学生信息',
+                shadeClose: true,
+                area: ['450px', '58%'],
+                content: "/Stu/addStu",
+                end: function () {
+                    var pagenum = 1;
+                    updataPage(pagenum, totalpage);
+                }
+            })
+        }
+
+        //双击事件
+        function dblclick(sno)
+        {  
+            sessionStorage["sno"] = sno;
+            sessionStorage["school"] = school;
+           
+            layer.open({
+                type: 2,
+                shade: 0.5,
+                title: '修改学生信息',
+                shadeClose:true,
+                area: ['450px','58%'],
+                content: "/Stu/mod_Stu",
+                end: function () {
+                    var pagenum=1;
+                    updataPage(pagenum, totalpage);
+                }
+            })
+        }
+
+        function btn_Excel() {
+            sfSchool();
+            $.ajax({
+                type: "post",
+                contentType: "application/json",
+                url: "/Stu/Stu_ExportData",
+                data:'{"school":"'+school+'"}',
+                success: function (result) {
+                    if (result == "ok")
+                    {
+                        alert("导出成功");
+                    }
+                }
+            });
+        }
+
+    </script>
+<div id="rhead">
+        <div class="rm">
+            <div class="rm-m">
+    <div id="stop">
+    <button class="btn btn-primary" id="addStu" onclick="add()">学生添加</button>
+    <span>学号</span><input type="text" id="seno"/>
+    <button class="btn btn-primary" id="selectStu">查询</button>
+        
+        <input type="radio" name="sex" checked="checked" value="1" /><label>在校</label>
+        
+        <input type="radio" name="sex" value="0" /><label>不在校</label>
+        <a href="#" onclick="btn_Excel()">导出数据</a>
+    </div>
+                </div>
+            </div>
+    </div>
+    <div id="smiddle">
+    </div>
+
+    <div id="sbottom">
+
+        <a id="prepage" class="pagecss" href="#" onclick="Prepage()">《上一页</a>
+        <a class="p" id="1" href="#">1</a>
+        <a class="p" id="2" href="#">2</a>
+        <a class="p" id="3" href="#">3</a>
+
+        <a class="p1" href="#">...</a>
+
+        <a id="tpage" class="p" href="#"></a>
+        <a id="nextpage" class="pagecss" href="#" onclick="NextPage()">下一页></a>
+    </div>
+    

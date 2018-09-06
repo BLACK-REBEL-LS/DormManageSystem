@@ -1,0 +1,5 @@
+E:\C#Practice\myPractice\MvcApplication2\Model\bin\Debug\Model.dll
+E:\C#Practice\myPractice\MvcApplication2\Model\bin\Debug\Model.pdb
+E:\C#Practice\myPractice\MvcApplication2\Model\obj\Debug\Model.dll
+E:\C#Practice\myPractice\MvcApplication2\Model\obj\Debug\Model.pdb
+E:\C#Practice\myPractice\MvcApplication2\Model\obj\Debug\Model.csprojResolveAssemblyReference.cache

@@ -1,0 +1,296 @@
+﻿@{
+    ViewBag.Title = "ManagerIndex";
+}
+@using Common;
+
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+
+    <script src="../../Scripts/bootstrap.js"></script>
+    <script src="../../layer/layer.js"></script>
+
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/CSS/fooder.css" rel="stylesheet" />
+    <link href="../../Content/CSS/head.css" rel="stylesheet" />
+    <script type="text/javascript">
+        $(function () {
+            $("#op").attr("src", "../../image/manager/outpeoG.png");
+            $("#br").attr("src", "../../image/manager/breakG.png");
+            $("#re").attr("src", "../../image/manager/repairG.png");
+
+            $("#wr").attr("src", "../../image/manager/workerW.png");
+
+            $("#pt").attr("src", "../../image/manager/stayG.png");
+            $("#st").attr("src", "../../image/manager/seeStuG.png");
+            $("#sch").attr("src", "../../image/manager/stayingG.png");
+            $("#fb").attr("src", "../../image/manager/feedbackG.png");
+        });
+        //PresentPageNum=1;//当前页面
+        //TotalCount=0;//总数据行数
+        //totalPage=0;//总页数
+
+        //function dataCount(duty)
+        //{
+        //    $.ajax({
+        //        type:"post",
+        //        contentType:"application/json",
+        //        url:'/Manager/getDataCount',
+        //        data:'{"duty":"'+duty+'"}',
+        //        dataType:"json",
+        //        success:function(result){
+
+
+        //            TotalCount=result;
+        //            totalPage=Math.ceil(TotalCount/18.0);
+
+        //            var pagenum = 1;
+        //            updateDate(pagenum, TotalCount, duty);
+        //        },
+        //        error:function(){}
+        //    });
+        
+        //}
+
+        //添加
+        //function addManager() {
+        //    layer.open({
+        //        type: 2,
+        //        shade: 0.5,
+        //        title: '添加宿管人员',
+        //        shadeClose: true,
+        //        area: ['450px', '58%'],
+        //        content: '/Manager/AddManger',
+        //        end: function () {
+                   
+        //            location.reload();
+        //        }
+        //    });
+        //}
+        
+        //更新数据
+        //function updateDate(pagenum,totalpage,duty) {
+        //    var pagesize = 18;
+        //    if ((pagenum - 1) * pagesize >= totalpage) {
+        //        pagenum = Math.ceil(totalpage / (pagesize * 1.0));
+        //    }
+        //    else if (pagenum <= 0) {
+        //        pagenum = 1;
+        //    }
+            
+        //    var statIndex = pagesize * (pagenum - 1);//开始 行数
+        //    var endIndex = pagesize * (pagenum);//结束 行数
+
+        //    $.ajax({
+        //        type: "post",
+        //        contentType: "application/json",
+        //        url: '/Manager/updateData',
+        //        data: '{"starIndex":"'+statIndex+'","endIndex":"'+endIndex+'","duty":"'+duty+'"}',
+        //        dataType: "json",
+        //        async: false,
+        //        success: function (result) {
+        //            var res = eval(result);
+        //            var k = 1;
+        //            var htmltxt = "<table class=\"table table-bordered table-condensed\"><thead class=\"thead-color\"><tr><th class=\"text-center\">序号</th><th class=\"text-center\">编号</th><th class=\"text-center\">职务</th><th class=\"text-center\">姓名</th><th class=\"text-center\">性别</th><th class=\"text-center\">年龄</th><th class=\"text-center\">负责楼号</th><th class=\"text-center\">联系电话</th><th class=\"text-center\">住址</th><th class=\"text-center\">备注</th></thead><tbody class=\"text-center\">";
+        //            $.each(res, function (i, d) {
+        //                htmltxt += "<tr ondblclick=\"dblclick(" + d.onumber + ",'" + d.job + "','" + d.oname + "','" + d.osex + "','" + d.datetime + "','" + d.bid + "','" + d.duty + "','" + d.tel + "','" + d.oarea + "','" + d.remark1 + "')\"><td>" + k + "</td><td>" + d.onumber + "</td><td>" + d.job + "</td><td>" + d.oname + "</td><td>" + d.osex + "</td><td>" + d.age + "</td><td>" + d.bid + "</td><td>"+d.tel+"</td><td>"+d.oarea+"</td><td>" + d.remark1 + "</td></tr>";
+        //                k++;
+        //            });
+        //            htmltxt += "</tbody></table>";
+        //            $("#omain").html(htmltxt);
+                    
+        //        },
+        //        error: function () { }
+
+        //    });
+           
+        //}
+
+            //查找
+            //$("#btn_sure").click(function () {
+               
+            //});
+
+            //function btn_Sure() {
+            //    sfONDuty();//先判断 是否 在岗
+            //    var number = $("#txt_number").val();
+            //    if (number == "") {
+            //        dataCount(duty);
+            //    }
+            //    else {
+            //        $.ajax({
+            //            type: "post",
+            //            contentType: "application/json",
+            //            url: "/Manager/Select_number",
+            //            data: '{"number":"' + number + '","duty":"' + duty + '"}',
+            //            dataType: "json",
+            //            success: function (result) {
+
+            //                var res = eval(result);
+            //                var k = 1;
+            //                var htmltxt = "<table class=\"table table-bordered table-condensed\"><thead class=\"thead-color\"><tr><th class=\"text-center\">序号</th><th class=\"text-center\">编号</th><th class=\"text-center\">职务</th><th class=\"text-center\">姓名</th><th class=\"text-center\">性别</th><th class=\"text-center\">年龄</th><th class=\"text-center\">负责楼号</th><th class=\"text-center\">联系电话</th><th class=\"text-center\">住址</th><th class=\"text-center\">备注</th></thead><tbody class=\"text-center\">";
+            //                $.each(res, function (i, d) {
+            //                    htmltxt += "<tr ondblclick=\"dblclick(" + d.onumber + ",'" + d.job + "','" + d.oname + "','" + d.osex + "','" + d.datetime + "','" + d.bid + "','" + d.duty + "','" + d.tel + "','" + d.oarea + "','" + d.remark1 + "')\"><td>" + k + "</td><td>" + d.onumber + "</td><td>" + d.job + "</td><td>" + d.oname + "</td><td>" + d.osex + "</td><td>" + d.age + "</td><td>" + d.bid + "</td><td>" + d.tel + "</td><td>" + d.oarea + "</td><td>" + d.remark1 + "</td></tr>";
+            //                    k++;
+            //                });
+            //                htmltxt += "</tbody></table>";
+            //                $("#omain").html(htmltxt);
+                           
+            //            },
+            //            error: function () { }
+            //        });
+            //    }
+            //}
+
+            function btn_Build() {
+                layer.open({
+                    type: 2,
+                    shade: 0.5,
+                    title: "宿舍楼情况",
+                    shadeClose: true,
+                    area: ['900px', '78%'],
+                    content: '/Manager/Build',
+                    end: function () {
+                    }
+                });
+            }
+
+            function sfONDuty() {
+                var v = document.getElementsByName("duty");
+                for (var i = 0; i < v.length; i++) {
+                    if (v[i].checked) {
+                        duty = v[i].value;
+                    }
+                }
+            }
+            function dblclick(number, job, name, sex, datetime, bid,duty , tel, oarea,remark1) {
+                sessionStorage["onumber"] = number;
+                sessionStorage["ojob"] = job;
+                sessionStorage["oname"] = name;
+                sessionStorage["osex"] = sex;
+                sessionStorage["odatetime"] = datetime;
+                sessionStorage["oduty"] = duty;
+                sessionStorage["obid"] = bid;
+                sessionStorage["otel"] = tel;
+                sessionStorage["oarea"] = oarea;
+                sessionStorage["oremark"] = remark1;
+                layer.open({
+                    type: 2,
+                    shade: 0.5,
+                    title: "修改信息",
+                    shadeClose: true,
+                    area: ['450px', '58%'],
+                    content: '/Manager/ModifyManger',
+                    end: function () {
+                        location.reload();
+                    }
+                });
+
+            }
+
+        //添加
+            function addManager() {
+                layer.open({
+                    type: 2,
+                    shade: 0.5,
+                    title: "添加宿舍",
+                    area:['450px','58%'],
+                    shadeClose: true,
+                    content: '/Manager/AddManger',
+                    end: function () {
+                        location.reload();
+                    }
+                });
+            }
+            function btn_Excel() {
+                $.ajax({
+                    type: "post",
+                    contentType: "application/json",
+                    url: "/Manager/Office_Excel",
+                    success: function (result) {
+                        if (result == "ok") {
+                            alert("导出成功");
+                        }
+                        else alert("失败");
+                    }
+                });
+            }
+   </script>
+<div id="rhead">
+        <div class="rm">
+            <div class="rm-m">
+    <div id="ohead">
+        @using (Ajax.BeginForm("Index", new AjaxOptions { })){
+        @*<button class="btn btn-primary" id="btn_Add" onclick="addManager()">添加</button>*@
+            <input type="button" class="btn btn-primary" id="btn_Add" onclick="addManager()" value="添加" />
+        <label>编号：</label>
+       //// <input type="text" id="txt_number" name="txt_number" />
+       @Html.TextBox("txt_number",ViewData["number"]);
+        @*<button class="btn btn-primary" id="btn_sure" onclick="btn_Sure()">检索</button>*@
+            
+         <label>楼号：</label>@*
+          <input type="text" id="txt_bid" name="txt_bid" />*@
+          @Html.TextBox("txt_bid",ViewData["bid"]);
+        <button type="submit" class="btn btn-primary">查找</button>
+        
+           
+        <label>在岗：</label><input type="radio" value="1" name="duty" checked="checked" required="required" />
+        <label>离岗：</label><input type="radio" value="0" name="duty" />
+            <a href="#" onclick="btn_Excel()">导出数据</a>
+        @*<button class="btn" onclick="btn_Build()">查看宿舍楼</button>*@
+            <input type="button" class="btn btn-primary" onclick="btn_Build()" value="查看宿舍楼" />
+        }
+    </div>
+                </div>
+            </div>
+    </div>
+    <div id="omain">
+        @if (ViewData["Table"] != null)
+        { 
+        <table class="table table-bordered table-condensed">
+            <thead class="thead-color">
+                <tr>
+                    <th class="text-center">序号</th>
+                    <th class="text-center">编号</th>
+                    <th class="text-center">职务</th>
+                    <th class="text-center">姓名</th>
+                    <th class="text-center">性别</th>
+                    <th class="text-center">年龄</th>
+                    <th class="text-center">负责楼号</th>
+                    <th class="text-center">联系电话</th>
+                    <th class="text-center">住址</th>
+                    <th class="text-center">备注</th>
+
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                
+                @{ var k = 1;
+        }
+        
+                @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["Table"]).Rows)
+                {
+                
+                    <tr ondblclick="dblclick(@dataRow["onumber"].ToString(),'@dataRow["job"].ToString()','@dataRow["oname"].ToString()','@dataRow["osex"].ToString()','@dataRow["datetime"].ToString()','@dataRow["bid"].ToString()','@dataRow["duty"].ToString()','@dataRow["tel"].ToString()','@dataRow["oarea"].ToString()','@dataRow["remark1"].ToString()')">
+                        <td>@k</td>
+                        <td>@dataRow["onumber"].ToString()</td>
+                        <td>@dataRow["job"].ToString()</td>
+                        <td>@dataRow["oname"].ToString()</td>
+                        <td>@dataRow["osex"].ToString()</td>
+                        <td>@dataRow["age"].ToString()</td>
+                        <td>@dataRow["bid"].ToString()</td>
+                        <td>@dataRow["tel"].ToString()</td>
+                        <td>@dataRow["oarea"].ToString()</td>
+                        <td>@dataRow["remark1"].ToString()</td>
+                    </tr>
+                    k++;
+                }
+                
+            </tbody>
+        </table>
+        <div id="foodpage">
+            @MvcHtmlString.Create(FoodPage.ShowPageFood((int)ViewData["pageIndex"], (int)ViewData["totalCount"]));
+        </div>
+        
+        }
+        
+    </div>

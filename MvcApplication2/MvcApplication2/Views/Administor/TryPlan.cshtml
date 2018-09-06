@@ -1,0 +1,194 @@
+﻿@model MvcApplication2.Models.IndexViewModel
+@{
+    ViewBag.Title = "TryPlan";
+}
+
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    <script src="../../layer/layer.js"></script>
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <link href="../../Content/CSS/head.css" rel="stylesheet" />
+    <link href="../../Content/CSS/fooder.css" rel="stylesheet" />
+    <script>
+        $(function () {
+            $("#op").attr("src", "../../image/manager/outpeoG.png");
+            $("#br").attr("src", "../../image/manager/breakG.png");
+            $("#re").attr("src", "../../image/manager/repairG.png");
+            $("#wr").attr("src", "../../image/manager/workerG.png");
+
+            $("#pt").attr("src", "../../image/manager/playW.png");
+
+            $("#st").attr("src", "../../image/manager/seeStuG.png");
+            $("#sch").attr("src", "../../image/manager/stayingG.png");
+            $("#fb").attr("src", "../../image/manager/feedbackG.png");
+
+            $("#u").attr("src", "../../image/manager/yonhG.png");
+            $("#sdept").find("option:contains('@Model.Sdept')").attr("selected", true);
+            $("#sex").find("option:contains('@Model.Sex')").attr("selected", true);
+            $("#sex").find("option:contains('@Model.Sgrade')").attr("selected", true);
+        });
+        function btn_Sure() {
+            var checked = [];
+            $('input:checkbox:checked').each(function () {
+                checked.push({ sno: $(this).val() });
+            });
+            sessionStorage["checked"] = JSON.stringify(checked);
+           
+            layer.open({
+                type: 2,
+                shade: 0.5,
+                title: "选择宿舍",
+                shadeClose: true,
+                area: ['550px', '68%'],
+                content: '/Administor/selectBuild',
+                end: function () {
+                    location.reload();
+                }
+            });
+        }
+        function btn_Back() {
+            var grade = $("#grade").val();
+            $.ajax({
+                type: "post",
+                contentType: "application/json",
+                url: "Administor/backStu",
+                data: '{"grade":"' + grade + '"}',
+                async: false,
+                success: function (result) {
+                    if (result == "ok") {
+                        alert("退宿成功");
+                    }
+                }
+            });
+        }
+        //全选或不全选
+        function CheckAll() {
+            var isCheck = $("#checkA").is(':checked');
+            $("input[type='checkbox']").each(function () {
+                this.checked = isCheck;
+            });
+        }
+    </script>
+@using (Ajax.BeginForm("TryPlan", new AjaxOptions { }))
+{
+     <div id="rhead">
+        <div class="rm">
+            <div class="rm-m">
+                <div class="pull-left">
+                    
+                        <label for="pgrade">年级：</label>
+                        <select id="pgrade" name="pgrade" >
+                            @foreach(System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["grade"]).Rows)
+                            {
+                            <option value="@dataRow["g"].ToString()">@dataRow["g"].ToString()</option>
+                            }
+                        </select>
+                        
+                        <label for="sdept">系院：</label>
+                        <select id="sdept" name="sdept">
+                        @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["sdept"]).Rows)
+                        {
+                            <option value="@dataRow["sdept"].ToString()">@dataRow["sdept"].ToString()</option>
+                        }
+                        </select>
+
+                        <label for="sex">性别：</label>
+                        <select id="sex" name="sex">
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+
+                        <button class="btn btn-primary" type="submit" >查找</button>
+
+                        <input type="button" class="btn btn-primary" onclick="btn_Sure()" value="选中楼号"/>
+                    
+                    
+                </div>
+                
+                <div class="pull-right">
+                    <label for="grade">年级：</label>
+                    <select id="grade" name="grade">
+                        @foreach(System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["grade"]).Rows)
+                        {
+                        <option value="@dataRow["g"].ToString()">@dataRow["g"].ToString()</option>
+                        }
+                    </select>
+                    <label>级</label>
+                    <button class="btn btn-primary" onclick="btn_Back()">退宿</button>
+                </div>
+                
+                </div>
+        </div>
+    </div>
+
+    <div id="rmain">
+        <table class="table table-bordered table-condensed">
+            <thead class="thead-color">
+                <tr>
+                    <th class="text-center"><input type="checkbox" onchange="CheckAll()" id="checkA" /> 选择</th>
+                    <th class="text-center">序号</th>
+                    <th class="text-center">学号</th>
+                    <th class="text-center">姓名</th>
+                    <th class="text-center">性别</th>
+                    <th class="text-center">系别</th>
+                    <th class="text-center">宿舍号</th>
+                    <th class="text-center">入学时间</th>
+                    <th class="text-center">拟毕业时间</th>
+                    <th class="text-center">修改时间</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                @{int k = 1;}
+                @foreach(var item in Model.itemTable)
+                {
+                    <tr>
+                        <td><input type='checkbox' value="@item["sno"]" /></td>
+                        <td>@k</td>
+                        <td>@item["sno"]</td>
+                        <td>@item["sname"]</td>
+                        <td>@item["ssex"]</td>
+                        <td>@item["sdept"]</td>
+                        <td>@item["dorm"]</td>
+                        <td>@item["s_time"]</td>
+                        <td>@item["e_time"]</td>
+                        <td>@item["m_time"]</td>
+
+                    </tr>
+                    k++;
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div id="pfood">
+        @if (Model.Pager.EndPage > 1)
+        { 
+        <ul class="pagination">
+            @if (Model.Pager.CurrentPage > 1)
+            { 
+                <li>
+                    <a href="/Administor/TryPlan?&sdept=@Model.Sdept&sex=@Model.Sex">First</a>
+                </li>
+                <li>
+                    <a href="/Administor/TryPlan?page=@(Model.Pager.CurrentPage-1)&sdept=@Model.Sdept&sex=@Model.Sex">Previous</a>
+                </li>
+            }
+            @for (var page = Model.Pager.StartPage; page <= Model.Pager.EndPage; page++)
+            { 
+                <li class="@(page==Model.Pager.CurrentPage?"active":"")">
+                    <a href="/Administor/TryPlan?page=@page&sdept=@Model.Sdept&sex=@Model.Sex">@page</a>
+                </li>
+            }
+            @if (Model.Pager.CurrentPage < Model.Pager.TotalPage)
+            { 
+                <li>
+                    <a href="/Administor/TryPlan?page=@(Model.Pager.CurrentPage+1)&sdept=@Model.Sdept&sex=@Model.Sex">Next</a>
+                </li>
+                <li>
+                    <a href="/Administor/TryPlan?page=@(Model.Pager.TotalPage)&sdept=@Model.Sdept&sex=@Model.Sex">Last</a>
+                </li>
+            }
+        </ul>
+        }
+    </div>
+}

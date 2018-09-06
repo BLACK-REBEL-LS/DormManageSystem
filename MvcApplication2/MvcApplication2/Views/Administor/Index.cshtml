@@ -1,0 +1,79 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head xmlns="http://www.w3.org/1999/xhtml">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    @*<script src="../../Scripts/jquery-1.7.2.min_74e92c4.js"></script>
+    <script src="../../Scripts/jquery-1.4.2.js"></script>
+    <script src="../../Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="../../Scripts/jquery.unobtrusive-ajax.js"></script>*@
+
+    <script src="../../Scripts/bootstrap.js"></script>
+    <script src="../../layer/layer.js"></script>
+
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/CSS/Administor_Index.css" rel="stylesheet" />
+    <title>学生寝室管理系统</title>
+    <script>
+        $(function () {
+            selectStu();
+        });
+       
+    function selectSushe() {
+                alert("122");
+                $("#sushe").attr("src", "../../image/gl1.png");
+                $("#stu").attr("src", "../../image/stu.png");
+                $("#yonghu").attr("src", "../../image/yonghu.png");
+
+                $(".main_bottom").load("../Manager/Index");
+    }
+    function selectStu() {
+        $("#stu").attr("src", "../../image/stu1.png");
+        $("#sushe").attr("src", "../../image/gl.png");
+        $("#yonghu").attr("src", "../../image/yonghu.png");
+
+        $(".main_bottom").load("../Stu/Index");
+    }
+    function selectYonghu() {
+        $("#yonghu").attr("src", "../../image/yonghu1.png");
+        $("#stu").attr("src", "../../image/stu.png");
+        $("#sushe").attr("src", "../../image/gl.png");
+    }
+        
+    </script>
+</head>
+<body>
+    <div>
+    <div id="head">
+        <p class="pull-left hr"><img src="../../image/sus.png" height="50" width="50" alt="宿舍" /> 学生宿舍管理系统</p>
+        <p class="pull-right hl">欢迎！admin 管理员|<a href="#">注销</a></p>
+    </div>
+
+    <div id="main">
+        <div class="main_top">
+            <ul class="m_ul">
+                <li><a href="#" onclick="selectStu()"><img src="../../image/stu.png" id="stu" /><br /> 学生信息管理</a></li>
+                <li class="ul_m"><a href="#" onclick="selectSushe()"><img src="../../image/gl.png" id="sushe" /><br />宿舍信息管理</a></li>
+                <li><a href="#" onclick="selectYonghu()"><img src="../../image/yonghu.png" id="yonghu" /><br /> 用户管理</a>@*<a href="../Manager/Index"></a>*@ </li>
+            </ul>
+        </div>
+
+        <div class="main_m"></div>
+
+        <div class="main_bottom">
+
+        </div>
+    </div>
+
+    <div id="fooder"></div>
+
+    </div>
+</body>
+</html>

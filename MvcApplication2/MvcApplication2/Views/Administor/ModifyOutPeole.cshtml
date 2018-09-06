@@ -1,0 +1,114 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script src="../../Scripts/jquery-1.7.2.min_74e92c4.js"></script>
+    <script src="../../Scripts/jquery-1.4.2.js"></script>
+    <script src="../../Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+
+    @*<script src="../../Scripts/jquery-1.9.1.min.js"></script>*@
+    <script src="../../layer/layer.js"></script>
+   
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <title></title>
+    <script>
+        $(function () {
+            var id = sessionStorage["lid"];
+            //alert(id);
+            var lname=sessionStorage["lname"];
+            var iname=sessionStorage["iname"];
+            var dorm=sessionStorage["ldorm"];
+            var reason=sessionStorage["lreason"];
+            var leader=sessionStorage["lleader"];
+            var s_time=sessionStorage["ls_time"];
+            var e_time=sessionStorage["le_time"];
+            var remark = sessionStorage["lremark"];
+            var tel = sessionStorage["ltel"];
+            $("#txt_lname").val(lname);
+            $("#txt_iname").val(iname);
+            $("#txt_dorm").val(dorm);
+            $("#txt_reason").val(reason);
+            $("#txt_leader").val(leader);
+            $("#txt_s_time").val(s_time);
+            $("#txt_e_time").val(e_time);
+            $("#txt_tel").val(tel);
+            $("#txt_remark").val(remark);
+            $("#txt_id").val(id);
+            
+
+        });
+        function afterAdd(data) {
+            if (data == "ok") {
+                window.alert("修改成功！");
+            }
+            else if (data == "no") {
+                window.alert("修改失败！");
+            }
+            closeLayer();
+        }
+        function Cancle() {
+            closeLayer();
+        }
+        function closeLayer() {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+            layer.close();
+        }
+        
+        
+    </script>
+</head>
+<body>
+     @using (Ajax.BeginForm("ModifyOutPeole", new AjaxOptions { }, new AjaxOptions() { OnSuccess = "afterAdd" }))
+    {
+        <form>
+            <label>编号: </label>
+            <input type="text" id="txt_id" name="txt_id" /><br />
+
+            <label>来访者姓名：</label>
+            <input type="text" id="txt_lname" name="txt_lname" /><br />
+
+            <label>被访者姓名：</label>
+            <input type="text" id="txt_iname" name="txt_iname" /><br />
+
+            <label>宿舍号：</label>
+            <input type="text" id="txt_dorm" name="txt_dorm" /><br />
+
+            <label>原因：</label>
+            <input type="text" id="txt_reason" name="txt_reason" /><br />
+
+            <label>批准人：</label>
+            <input type="text" id="txt_leader" name="txt_leader" /><br />
+
+            <label>到来时间：</label>
+            <input type="datetime" id="txt_s_time" name="txt_s_time" /><br />
+
+            <label>离开时间：</label>
+            <input type="datetime" id="txt_e_time" name="txt_e_time" /><br />
+
+            <label>联系电话：</label>
+            <input type="text" id="txt_tel" name="txt_tel" /><br />
+
+            <label>备注：</label>
+            <input type="text" id="txt_remark" name="txt_remark" /><br />
+
+            
+
+            <button type="submit" class="btn btn-primary">确定</button>
+            @*<button class="btn" onclick="btn_Dete()">删除</button>*@
+            <button class="btn" onclick="Cancle()">取消</button>
+           @* <input type="button" class="btn" onclick="btn_Dete()" value="删除" />*@
+
+        </form>
+
+    }
+</body>
+</html>

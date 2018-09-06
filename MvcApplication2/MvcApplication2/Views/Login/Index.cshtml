@@ -1,0 +1,262 @@
+﻿@*admin主页面*@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="../../Scripts/jquery-1.7.2.min_74e92c4.js"></script>
+    <script src="../../Scripts/jquery-1.4.2.js"></script>
+    <script src="../../Scripts/jquery.unobtrusive-ajax.js"></script>
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <title></title>
+    <style type="text/css">
+        * {
+            padding:0;
+            margin:0;
+        }
+        body {
+         background-color:#3c4e72;
+        }
+        #main {
+            height:400px;
+            width:350px;
+            
+            margin-top:50px;
+            margin-left:450px;
+            background: rgb(119,131,157); /*背景透明*/
+            border: 2px solid rgb(160,169,186); /*边框半透明*/
+            border-radius:5px;
+            
+        }
+        /*ul {
+            list-style:none;
+        }*/
+        ul li {
+            float:left;
+            display:block;
+            width:172px;
+            height:50px;
+            text-align:center;
+            list-style:none;
+            /*border:1px solid white;*/
+            margin-top:-9px;
+            padding:10px;
+            color:white;
+            font-size:16px;
+            
+        }
+        
+        .tab {
+            width:345px;
+            height:342px;
+            font-size:12px;
+            display:none;
+            /*border:1px solid red;*/
+            float:left;
+            border-top:1px solid rgb(160,168,187);
+        }
+        label {
+            color:rgb(227,230,236);
+            font-family:"微软雅黑";
+            font-size:16px;
+            
+        }
+        .ipt {
+            border: 1px solid #d3d3d3;
+            padding: 10px 10px;
+            width: 300px;
+            margin-left:15px;
+            border-radius: 4px;
+            padding-left: 35px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        }
+        .ipt:focus {
+                border-color: #66afe9;
+                outline: 0;
+                -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+                box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+            }
+        .u_logo {
+            background:url("../../image/Login/user.png") no-repeat;
+            padding:10px;
+            position:absolute;
+            top:40px;
+            left:25px;
+        }
+        .p_logo {
+            background:url("../../image/Login/pwd.png") no-repeat;
+            padding:10px;
+            position:absolute;
+            top:12px;
+            left:25px;
+        }
+        .t_logo {
+            background:url("../../image/Login/tel.png") no-repeat;
+            padding:10px;
+            position:absolute;
+            top:12px;
+            left:25px;
+        }
+        .s_logo {
+            background:url("../../image/Login/sno.png") no-repeat;
+            padding:10px;
+            position:absolute;
+            top:12px;
+            left:25px;
+        }
+        .btn_it {
+            width:300px;
+            height:40px;
+            border-radius:4px;
+            margin-left:15px;
+            border:1px solid #d3d3d3;
+            padding:10px 10px;
+            color:rgb(117,117,117);
+            font-weight:bold;
+            font-size:14px;
+        }
+        .btn_z {
+            color:rgb(117,117,117);
+            font-weight:bold;
+        }
+    </style>
+    <script>
+        function ChangeDiv(divId, divName) {
+            document.getElementById("JKDiv_0").style.display = "none";
+            //document.getElementById("0").style.backgroundColor = "transparent";
+            document.getElementById("JKDiv_1").style.display = "none";
+          //  document.getElementById("1").style.backgroundColor = "transparent";
+            document.getElementById(divName + divId).style.display = "block";
+           // document.getElementById(divId).style.backgroundColor = "rgba(255,255,255,0.3)";
+        }
+        //登陆
+        function afterLogin(data) {
+            sessionStorage["username"] = $("#name").val();
+            if (data == "-1" || data == "0") {
+                alert("用户不存在");
+                $("#name").val("");
+                $("#pwd").val("");
+                window.event.returnValue = false;
+            }
+            else if (data == "2") {
+                alert("密码错误");
+                $("#pwd").val("");
+                window.event.returnValue = false;
+            }
+            else if (data == "3") {
+                alert("admin");
+                location.href = "../Administor/OutPeopleCome";
+               // window.event.returnValue = false;
+            }
+            else if (data == "4") {
+                alert("student");
+                location.href = "/Login/StuRepair";
+                //location.href = "../Stu/SeeStudent";
+                // window.event.returnValue = false;
+            }
+        }
+        //注册
+        function afterRegister(data) {
+            if (data == "-1") {
+                alert("两次密码输入不一致，请重新输入");
+                $("#txt_pwd2").val("");
+            }
+            else if (data == "4")
+            {
+                alert("此学号不正确，请重新输入");
+                $("#txt_sno").val("");
+            }
+            else if (data == "2") {
+                alert("注册成功，去登陆");
+                
+                btn_Cancle();
+            }
+            else if (data == "3") {
+                alert("注册出现未知错误，请及时联系管理员");
+            }
+        }
+        //取消
+        function btn_Cancle() {
+            document.getElementById("JKDiv_1").style.display = "none";
+            document.getElementById("JKDiv_0").style.display = "block";
+        }
+
+        //转到注册
+        function Register() {
+            document.getElementById("JKDiv_0").style.display = "none";
+            document.getElementById("JKDiv_1").style.display = "block";
+
+        }
+        //转去登陆
+        function log() {
+            document.getElementById("JKDiv_0").style.display = "block";
+            document.getElementById("JKDiv_1").style.display = "none";
+        }
+    </script>
+</head>
+<body>
+    <div id="main">
+        <div>
+            <ul>
+                <li id="0" onclick="ChangeDiv('0','JKDiv_')" style="border-right:1px solid rgba(255,255,255,0.3)">登陆 </li>
+                <li id="1" onclick="ChangeDiv('1','JKDiv_')">注册 </li>
+            </ul>
+        </div>
+
+        <div id="JKDiv_0" class="tab" style="display:block;">
+            @using (Ajax.BeginForm("CheckLogin", new AjaxOptions { }, new AjaxOptions() { OnSuccess = "afterLogin" }))
+            {
+           <p style="padding:30px 0 10px;position:relative">
+               <span class="u_logo"></span>
+               <input class="ipt" id="name" name="name" type="text" placeholder="enter UserName" />
+           </p>
+            <p style="position:relative">
+               <span class="p_logo"></span>
+                <input class="ipt" id="pwd" name="pwd" type="password" placeholder="enter PassWord" />
+            </p>
+            
+                <button class="btn btn_it" type="submit">Login</button><br />
+            <a href="#" onclick="Register()" style="color:white;">还没有账号?转去注册...</a>
+            }
+        </div>
+
+        <div id="JKDiv_1" class="tab" >
+            @using (Ajax.BeginForm("SubmitUser", new AjaxOptions { }, new AjaxOptions() { OnSuccess = "afterRegister" }))
+            {
+            <p style="padding:30px 0 10px;position:relative">
+                <span class="u_logo"></span>
+                <input class="ipt" id="txt_user" name="txt_user" type="text" placeholder="UserName" />
+            </p>
+            <p style="position:relative">
+                <span class="s_logo"></span>
+                <input class="ipt" id="txt_sno" name="txt_sno" type="text" placeholder="your sno" />
+            </p>
+            <p style="position:relative">
+                <span class="p_logo"></span>
+                <input class="ipt" id="txt_pwd" name="txt_pwd" type="password" placeholder="PassWord" />
+            </p>
+            <p style="position:relative">
+                <span class="p_logo"></span>
+                <input class="ipt" id="txt_pwd2" name="txt_pwd2" type="password" placeholder="try again pwd" />
+            </p>
+            <p style="position:relative">
+                <span class="t_logo"></span>
+                <input class="ipt" id="txt_tel" name="txt_tel" type="text" placeholder="enter your tel" />
+            </p>
+                <button class="btn btn_z" style="margin-left:150px;" type="submit">Submit</button>
+                <button class="btn btn_z" onclick="btn_Cancle()">Cancle</button><br />
+                <a href="#" onclick="log()" style="color:white;">转去登陆~</a>
+            }
+            
+        </div>
+    </div>
+</body>
+</html>

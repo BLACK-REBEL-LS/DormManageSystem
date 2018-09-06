@@ -1,0 +1,89 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="../../Scripts/jquery-1.7.2.min_74e92c4.js"></script>
+    <script src="../../Scripts/jquery-1.4.2.js"></script>
+    <script src="../../Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="../../layer/layer.js"></script>
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <title></title>
+    <script>
+        function afterAdd(data) {
+            if (data == "ok") {
+                window.alert("修改成功！");
+            }
+            else if (data == "no") {
+                window.alert("修改失败！");
+            }
+            closeLayer();
+        }
+        function Cancle() {
+            closeLayer();
+        }
+        function closeLayer() {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+            layer.close();
+        }
+    </script>
+</head>
+<body>
+    @using (Ajax.BeginForm("addRepair", new AjaxOptions { }, new AjaxOptions() { OnSuccess = "afterAdd" }))
+    {
+        <form>
+            
+            <label>报修人：</label>
+            <input type="text" id="txt_rname" name="txt_rname" /><br />
+
+            <label>宿舍号：</label>
+            <input type="text" id="txt_dorm" name="txt_dorm" /><br />
+
+            <label>类别：</label>
+            <select name="txt_category">
+                @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["dt"]).Rows)
+                {
+                    <option>@dataRow["category"].ToString()</option>
+                }
+                
+            </select>
+           @* <input type="text" id="txt_category" name="txt_category" />*@<br />
+
+            
+            <input type="radio" name="handle" checked="checked" value="1" /><label>已处理：</label><br />
+            
+            <input type="radio" name="handle" value="0" /><label>未处理：</label><br />
+
+            <label>报修时间：</label>
+            <input type="datetime" id="txt_s_time" name="txt_s_time" /><br />
+
+            <label>完成时间：</label>
+            <input type="datetime" id="txt_e_time" name="txt_e_time" /><br />
+
+            <label>维修人：</label>
+            <input type="text" id="txt_wname" name="txt_wname" /><br />
+
+            <label>学号：</label>
+            <input type="text" id="txt_sno" name="txt_sno" /><br />
+
+            <label>备注：</label>
+            <input type="text" id="txt_remark" name="txt_remark" /><br />
+
+            
+
+            <button type="submit" class="btn btn-primary">确定</button>
+            
+            <button class="btn" onclick="Cancle()">取消</button>
+        
+
+        </form>
+
+    }
+</body>
+</html>

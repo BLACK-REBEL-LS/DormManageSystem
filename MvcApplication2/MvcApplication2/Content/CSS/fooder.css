@@ -1,0 +1,53 @@
+﻿ .thead-color {
+            background-color:rgb(66,85,117);
+            color:white;
+        }
+        table tbody tr:nth-child(even) {
+            background-color:rgb(235,241,255);
+        }
+        table tbody tr:nth-child(odd) {
+            background-color:rgb(247,250,255);
+        }
+        table tbody tr:hover {
+            background-color:rgb(109,148,207);
+            color:white;
+        }
+ .comm {
+            display:block;
+            float:left;
+            text-align:center;
+            font-size:12px;
+            padding:6px;
+            color:white;
+            margin-right:2px;
+        }
+        .pg {
+            width:70px;
+            height:30px;
+            background-color:rgb(59,74,97);
+        }
+        .dp {
+            width:30px;
+            height:30px;
+            background-color:white;
+            color:rgb(152,153,157);
+        }
+        .cp {
+            font-size:12px;
+            width:30px;
+            height:30px;
+            background-color:rgb(59,74,97);
+
+        }
+        .ccp {
+            width:30px;
+            height:30px;
+            background-color:white;
+            color:rgb(152, 153, 157);
+        }
+        .comm:hover {
+            background-color:rgb(13,164,211);
+            text-decoration:none;
+            color:white;
+        }
+        

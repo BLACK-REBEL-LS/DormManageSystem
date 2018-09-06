@@ -1,0 +1,137 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html  xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="../../Scripts/jquery-1.9.1.min.js"></script>
+    
+    <script src="../../layer/layer.js"></script>
+    <link href="../../layer/skin/layer.css" rel="stylesheet" />
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+    <link href="../../Content/CSS/head.css" rel="stylesheet" />
+    <link href="../../Content/CSS/fooder.css" rel="stylesheet" />
+    <title></title>
+    <style type="text/css">
+    </style>
+    <script>
+        
+        function btn_Stu()
+        {
+            var sdept = $("#sdept").val();
+            var sex = $("#sex").val();
+
+            $.ajax({
+                type: "post",
+                contentType: "application/json",
+                url: "Administor/selectNoPlanStu",
+                data: '{"sdept":"'+sdept+'","sex":"'+sex+'"}',
+                dataType: "json",
+                async: false,
+                success: function (result) {
+                    var res = eval(result);
+                    var k = 1;
+                    var htmltxt = "<table class=\"table table-bordered table-condensed\"><thead class=\"thead-color\"><tr><th class=\"text-center\">选择</th><th class=\"text-center\">序号</th><th class=\"text-center\">学号</th><th class=\"text-center\">姓名</th><th class=\"text-center\">性别</th><th class=\"text-center\">系别</th><th class=\"text-center\">宿舍号</th><th class=\"text-center\">入学时间</th><th class=\"text-center\">拟毕业时间</th><th class=\"text-center\">修改时间</th></tr></thead><tbody class=\"text-center\">";
+                    $.each(res, function (i, d) {
+                        htmltxt += "<tr><td><input type='checkbox' value="+d.sno+" /></td><td>" + k + "</td><td>" + d.sno + "</td><td>" + d.sname + "</td><td>" + d.ssex + "</td><td>" + d.sdept + "</td><td>" + d.dorm + "</td><td>" + d.s_time + "</td><td>" + d.e_time + "</td><td>" + d.m_time + "</td></tr>";
+
+                        k++;
+                    });
+                    htmltxt += "</tbody></table>";
+                    $("#pmain").html(htmltxt);
+                },
+                error: function () { }
+            });
+        }
+
+        function btn_Sure()
+        {
+            var checked = [];
+            $('input:checkbox:checked').each(function () {
+                checked.push({ sno: $(this).val() });
+            });
+            sessionStorage["checked"] = JSON.stringify(checked);
+           // alert(JSON.stringify(checked));
+            //alert(checked.length);
+           // sessionStorage["sbid"] = $("#bid").val();
+            layer.open({
+                type: 2,
+                shade: 0.5,
+                title: "选择宿舍",
+                shadeClose: true,
+                area: ['550px', '68%'],
+                content: '/Administor/selectBuild',
+                end: function () {
+                    btn_Stu();
+                }
+            });
+        }
+
+        function btn_Back()
+        {
+            var grade = $("#grade").val();
+            $.ajax({
+                type: "post",
+                contentType: "application/json",
+                url: "Administor/backStu",
+                data: '{"grade":"' + grade + '"}',
+                async: false,
+                success: function (result) {
+                    if (result == "ok") {
+                        alert("退宿成功");
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div id="rhead">
+        <div class="rm">
+            <div class="rm-m">
+                <div class="pull-left">
+                    <label for="sdept">系院：</label>
+                <select id="sdept" name="sdept">
+                    @foreach (System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["sdept"]).Rows)
+                    {
+                     <option value="@dataRow["sdept"].ToString()">@dataRow["sdept"].ToString()</option>
+                    }
+                </select>
+
+                <label for="sex">性别：</label>
+                <select id="sex" name="sex">
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+
+                <button class="btn btn-primary" onclick="btn_Stu()">查找</button>
+
+                <button class="btn btn-primary" onclick="btn_Sure()">选择楼号</button>
+                </div>
+                
+                <div class="pull-right">
+                    <label for="grade">年级：</label>
+                    <select id="grade" name="grade">
+                        @foreach(System.Data.DataRow dataRow in ((System.Data.DataTable)ViewData["grade"]).Rows)
+                        {
+                        <option value="@dataRow["g"].ToString()">@dataRow["g"].ToString()</option>
+                        }
+                    </select>
+                    <label>级</label>
+                    <button class="btn btn-primary" onclick="btn_Back()">退宿</button>
+                </div>
+                
+                </div>
+        </div>
+    </div>
+    <div id="pmain">
+
+    </div>
+    <div id="pfood">
+       
+    </div>
+</body>
+</html>
